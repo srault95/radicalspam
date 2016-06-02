@@ -1,26 +1,29 @@
+============
 Radical-Spam
 ============
 
+**Serveur de filtrage SMTP - Anti-Virus et Anti-Spam intégré**
+
 **Fonctionnalités:**
 
-* Distribution Linux: Ubuntu 16.04 (Xenial)
-* Serveur SMTP : Postfix 3.1.0
-* Serveur de filtrage : Amavisd-new 2.11.0
-* Anti-Spam : SpamAssassin 3.4.1
-* Anti-Virus : Clamav 0.99
-* Serveur de cache : Redis Server 2.3.0
-* Razor
-* Pyzor
-* Syslog intégré, redirigé pour docker
-* Mise à jour automatique des signatures virales et des règles anti-spam
+- Distribution Linux: Ubuntu 16.04 (Xenial)
+- Serveur SMTP : Postfix 3.1.0
+- Serveur de filtrage : Amavisd-new 2.11.0
+- Anti-Spam : SpamAssassin 3.4.1
+- Anti-Virus : Clamav 0.99
+- Serveur de cache : Redis Server 2.3.0
+- Razor
+- Pyzor
+- Syslog intégré, redirigé pour docker
+- Mise à jour automatique des signatures virales et des règles anti-spam
 
 Requis
 ------
 
-* 10 Go minimum (selon durée de stockage) 
-* 4 Go RAM minimum (8 Go conseillé)
-* Serveur Docker 1.10+ (testé avec docker 1.10.3 sur Ubuntu 14.04 OVH)
-* Accès root
+- 10 Go minimum (selon durée de stockage) 
+- 4 Go RAM minimum (8 Go conseillé)
+- Serveur Docker 1.10+ (testé avec docker 1.10.3 sur Ubuntu 14.04 OVH)
+- Accès root
 
 Démarrage rapide en 6 commandes
 -------------------------------
