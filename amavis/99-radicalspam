@@ -1,19 +1,14 @@
 use strict;
 
-# $helpers_home = "$MYHOME/var";
-
 @bypass_header_checks_maps 	= (1);
 
 $mydomain = "$ENV{MY_DOMAIN}";
 $myhostname = "$ENV{MY_HOSTNAME}";
 
-#$inet_socket_bind = undef;
-#@inet_acl = qw( 127.0.0.1 [::1] 172.17.0.0/16);
-
 $QUARANTINEDIR = "$MYHOME/quarantine";
 $quarantine_subdir_levels = 0;
 
-$log_level = 2;
+$log_level = 0;
 $log_recip_templ = undef;
 $do_syslog = 1;
 $syslog_facility = 'mail';
@@ -60,9 +55,9 @@ $forward_method 		= "smtp:[127.0.0.1]:10025";
 $notify_method 			= $forward_method;
 
 #FIXME: redis Insecure dependency in socket while running
-#@storage_redis_dsn = ( {server=>"$ENV{REDIS_SERVER}", db_id=>1} );
-#$redis_logging_key = 'amavis-log';
-#$redis_logging_queue_size_limit = 300000;  # about 250 MB / 100000
+@storage_redis_dsn = ( {server=>"$ENV{REDIS_SERVER}", db_id=>1} );
+$redis_logging_key = 'amavis-log';
+$redis_logging_queue_size_limit = 300000;  # about 250 MB / 100000
 
 @whitelist_sender_maps 		= ( read_hash("$MYHOME/whitelist_sender") );
 @blacklist_sender_maps 		= ( read_hash("$MYHOME/blacklist_sender") );
@@ -82,19 +77,12 @@ $allowed_added_header_fields{lc('X-Relay-Country')} 	= 1;
 $allowed_added_header_fields{lc('X-Relay-Countries')} 	= 1;
 $allowed_added_header_fields{lc('X-RadicalSpam')} 	= 1;
 
-%final_destiny_by_ccat = (
-  CC_VIRUS,      D_DISCARD,
-  CC_BANNED,     D_DISCARD,
-  CC_UNCHECKED,  D_BOUNCE,
-  CC_SPAM,       D_PASS,
-  CC_BADH,       D_PASS,
-  CC_OVERSIZED,  D_PASS,
-  CC_CLEAN,      D_PASS,
-  CC_CATCHALL,   D_PASS,
-);
+$final_virus_destiny  = D_DISCARD;
+$final_banned_destiny = D_DISCARD;
+$final_spam_destiny   = D_PASS;
+$final_bad_header_destiny = D_PASS;
+$final_unchecked_destiny = D_BOUNCE;
 
-$warnvirussender 		= 0;
-$warnspamsender 		= 0;
 $warnbannedsender 		= 0;
 $warnbadhsender 		= 0;
 $warnvirusrecip 		= 1;
@@ -103,14 +91,12 @@ $warnbadhrecip 			= 0;
 $warn_offsite 			= 1;
 
 %banned_rules = (
-  'default' => new_RE(
+  'DEFAULT' => new_RE(
     qr'.\.(ade|adp|app|bas|bat|chm|cmd|com|cpl|crt|fxp|hlp|hta|inf|ins|isp|lnk|mdt|mdw|msc|msp|mst|ops|pif|prg|reg|scr|sct|shb|shs|vbs|wsc|wsf|wsh)$'i,
   ),
 );
 
 $sa_local_tests_only 		= 0;
-$sa_auto_whitelist 			= 0;
-$sa_timeout                 = 30;
 $sa_mail_body_size_limit 	= 400*1024; 
 
 $sa_tag_level_deflt  		= -999.0;
@@ -127,19 +113,19 @@ $sa_spam_subject_tag 		= undef;
 @spam_subject_tag2_maps 	= ('[*** ? SPAM ***] ');
 @spam_subject_tag3_maps 	= ('[*** SPAM ***] ');
 
-$sa_spam_modifies_subj 		= 1;
-$sa_spam_level_char 		= '*';
-$sa_spam_report_header 		= 0;
+my $my_from			= "$ENV{MY_ROOT_EMAIL}";
+my $my_from_rfc2822		= "'Alert' <$ENV{MY_ROOT_EMAIL}>";
+my $my_admin			= "$ENV{MY_ROOT_EMAIL}";
 
-my $my_from			= "$ENV{EMAIL_FROM}";
-my $my_from_rfc2822		= "'Alert' <$ENV{EMAIL_FROM}>";
-my $my_admin			= "$ENV{EMAIL_FROM}";
-
-$virus_admin               = $my_from;
-$mailfrom_notify_admin     = $my_from;
-$mailfrom_notify_recip     = $my_from;
-$mailfrom_notify_spamadmin = $my_from;
-$mailfrom_to_quarantine = ''; # null return path; uses original sender if undef
+$newvirus_admin 			= $my_admin;
+$virus_admin				= $my_from;		#notif.recip
+$spam_admin 				= $my_admin;
+$banned_admin 				= $my_admin;
+$bad_header_admin 			= $my_admin;
+$mailfrom_notify_admin		= $my_from;		#notif. sender
+$mailfrom_notify_recip		= $my_from;		#notif. sender
+$mailfrom_notify_spamadmin	= $my_from;		#notif. sender
+$mailfrom_to_quarantine 	= '';
 
 @av_scanners = (
  ['ClamAV-clamd',
