@@ -40,13 +40,15 @@ ADD scripts/spamd.sh /etc/service/spamd/run
 ADD scripts/amavis.sh /etc/service/amavis/run
 ADD scripts/postfix.sh /etc/service/postfix/run
 ADD scripts/redis.sh /etc/service/redis/run
+ADD scripts/postgrey.sh /etc/service/postgrey/run
 
 RUN chmod +x /etc/service/freshclam/run \
 	/etc/service/clamd/run \
 	/etc/service/spamd/run \
 	/etc/service/amavis/run \
 	/etc/service/postfix/run \
-	/etc/service/redis/run
+	/etc/service/redis/run \
+	/etc/service/postgrey/run
 
 WORKDIR /var/log
 
