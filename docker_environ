@@ -1,4 +1,4 @@
-### Paramètres requis
+### Paramètres requis (important)
 
 # Nom du MX postfix
 MY_HOSTNAME=mx1.example.org
@@ -9,11 +9,24 @@ MY_DOMAIN=example.org
 # Adresse email du compte root
 MY_ROOT_EMAIL=root@example.org
 
+# Adresse autorisé à envoyer des mails 
+MY_NETWORK=127.0.0.1
+
+# Adresse IP/Port de livraison des mails en interne
+MY_TRANSPORT=relay:[${MY_NETWORK}]:2500
+# OU Relay vers lesquels tous les mails seront routés
+# MY_RELAYHOST="[${MY_NETWORK}]:2500"
+
+### Paramètres secondaires
+
 # Nombre d'instance Amavis (1 par cpu/coeur)
 AMAVIS_MAX_SERVERS=4
 
 # Taille limite en octets des message acceptés (10 Mo)
 MESSAGE_SIZE_LIMIT=10485760
+
+# Valeurs possible: 127.0.0.1:6379
+REDIS_SERVER=/var/run/redis/redis.sock
 
 ### Paramètres Optionnels
 

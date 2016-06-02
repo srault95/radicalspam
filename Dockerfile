@@ -5,7 +5,7 @@ ENV AMAVIS_VERSION 2.11.0
 ENV MY_HOSTNAME mx.example.net
 ENV MY_DOMAIN localhost.net
 ENV AMAVIS_MAX_SERVERS 2
-ENV REDIS_SERVER 127.0.0.1:6379
+ENV REDIS_SERVER /var/run/redis/redis.sock
 
 RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
 RUN echo "postfix postfix/mailname string mx.example.net" | debconf-set-selections
