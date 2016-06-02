@@ -13,9 +13,7 @@ MY_ROOT_EMAIL=root@example.org
 MY_NETWORK=127.0.0.1
 
 # Adresse IP/Port de livraison des mails en interne
-MY_TRANSPORT=relay:[${MY_NETWORK}]:2500
-# OU Relay vers lesquels tous les mails seront routés
-# MY_RELAYHOST="[${MY_NETWORK}]:2500"
+MY_TRANSPORT=relay:[127.0.0.1]:2500
 
 ### Paramètres secondaires
 
@@ -31,7 +29,7 @@ REDIS_SERVER=/var/run/redis/redis.sock
 ### Paramètres Optionnels
 
 # Décommentez, pour renvoyer tous les mails vers un autre serveur
-# RELAYHOST=[172.17.0.1]:1025
+#RELAYHOST=[127.0.0.1]:2500
 
 # Bind l'ip de postfix pour l'envoi des mails
 # Utile quand vous avez plusieurs IP et que souhaitez utiliser une
