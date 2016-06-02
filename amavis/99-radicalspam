@@ -1,5 +1,7 @@
 use strict;
 
+$pid_file = undef;
+
 @bypass_header_checks_maps 	= (1);
 
 $mydomain = "$ENV{MY_DOMAIN}";

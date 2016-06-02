@@ -38,7 +38,8 @@ apt-get update && apt-get install -y --no-install-recommends \
  amavisd-new \
  postgrey \
  postfix \
- redis-server
+ redis-server \
+ rep
 
 wget http://www.ijs.si/software/amavisd/amavisd-new-${AMAVIS_VERSION}.tar.xz \
   && tar -Jxvf amavisd-new-${AMAVIS_VERSION}.tar.xz \
