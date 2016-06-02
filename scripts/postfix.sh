@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 exec 1>&2
 
 mkdir -p /etc/postfix/local
@@ -60,7 +60,13 @@ fi
 [ -e /etc/postfix/local/transport ] || touch /etc/postfix/local/transport
 [ -e /etc/postfix/local/mynetworks ] || touch /etc/postfix/local/mynetworks
 
-grep '127.0.0.1' /etc/postfix/local/mynetworks || echo -e "127.0.0.1\t#loopback" >> /etc/postfix/local/mynetworks 
+grep ${MY_NETWORK} /etc/postfix/local/mynetworks 2>/dev/null 1>&2 || echo -e "${MY_NETWORK}\t#loopback" >> /etc/postfix/local/mynetworks
+grep ${MY_DOMAIN} /etc/postfix/local/relays 2>/dev/null 1>&2 || echo -e "${MY_DOMAIN}\tOK" >> /etc/postfix/local/relays  
+grep ${MY_DOMAIN} /etc/postfix/local/directory 2>/dev/null 1>&2 || echo -e "@${MY_DOMAIN}\tOK" >> /etc/postfix/local/directory
+
+#if [ -n "${MY_TRANSPORT}" ]; then
+#	grep ${MY_TRANSPORT} /etc/postfix/local/transport 2>/dev/null 1>&2 || echo -e "${MY_DOMAIN}\t${MY_TRANSPORT}" >> /etc/postfix/local/transport
+#fi 
 
 postmap /etc/postfix/local/relays
 postmap /etc/postfix/local/directory
