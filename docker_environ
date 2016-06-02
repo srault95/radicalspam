@@ -1,0 +1,27 @@
+### Paramètres requis
+
+# Nom du MX postfix
+MY_HOSTNAME=mx1.example.org
+
+# Votre domaine principal
+MY_DOMAIN=example.org
+
+# Adresse email du compte root
+MY_ROOT_EMAIL=root@example.org
+
+# Nombre d'instance Amavis (1 par cpu/coeur)
+AMAVIS_MAX_SERVERS=4
+
+# Taille limite en octets des message acceptés (10 Mo)
+MESSAGE_SIZE_LIMIT=10485760
+
+### Paramètres Optionnels
+
+# Décommentez, pour renvoyer tous les mails vers un autre serveur
+# RELAYHOST=[172.17.0.1]:1025
+
+# Bind l'ip de postfix pour l'envoi des mails
+# Utile quand vous avez plusieurs IP et que souhaitez utiliser une
+# autre interface que eth0
+#BIND_SMTP_TRANSPORT=172.17.42.1
+
