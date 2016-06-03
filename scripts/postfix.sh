@@ -62,7 +62,15 @@ grep ${MY_DOMAIN} /etc/postfix/local/directory 2>/dev/null 1>&2 || echo -e "@${M
 
 #if [ -n "${MY_TRANSPORT}" ]; then
 #	grep ${MY_TRANSPORT} /etc/postfix/local/transport 2>/dev/null 1>&2 || echo -e "${MY_DOMAIN}\t${MY_TRANSPORT}" >> /etc/postfix/local/transport
-#fi 
+#fi
+
+grep ${MY_ROOT_EMAIL} /etc/aliases 2>/dev/null 1>&2
+RET=$?
+if [ "$RET" != "0" ]; then
+	echo "postmaster: root"> /etc/aliases 
+	echo "root: ${MY_ROOT_EMAIL}" >> /etc/aliases 
+	newaliases
+fi 
 
 postmap /etc/postfix/local/relays
 postmap /etc/postfix/local/directory
