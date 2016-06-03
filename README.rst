@@ -4,6 +4,8 @@ Radical-Spam
 
 **Serveur de filtrage SMTP - Anti-Virus et Anti-Spam intégré**
 
+|Build Status| |Build Doc| |Gitter|
+
 **Fonctionnalités:**
 
 * Distribution Linux: Ubuntu 16.04 (Xenial)
@@ -11,10 +13,12 @@ Radical-Spam
 * Serveur de filtrage : Amavisd-new 2.11.0
 * Anti-Spam : SpamAssassin 3.4.1
 * Anti-Virus : Clamav 0.99
+* Serveur NoSQL MongoDB 3.2.6
 * Serveur de cache : Redis Server 2.3.0
 * Razor
 * Pyzor
-* Syslog intégré, redirigé pour docker
+* Web UI
+* Syslog intégré avec enregistrement des logs dans MongoDB
 * Mise à jour automatique des signatures virales et des règles anti-spam
 
 ======
@@ -212,6 +216,7 @@ Vous pouvez externaliser les répertoires de données à l'aide des volumes dock
        -v $PWD/store/clamav:/var/lib/clamav \
        -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
        -v $PWD/store/postfix/config:/etc/postfix/local \
+       -v $PWD/store/mongodb/data:/var/lib/mongodb \
        rs/radicalspam:4.0.0
        
 Si vous devez réinstaller Radical-Spam, il suffira de copier le répertoire store/ 
@@ -227,4 +232,17 @@ Pour synchroniser la timezone avec celle de l'hôte:
 
     # Executer le docker run en ajoutant le volume suivant:
     -v /etc/localtime:/etc/localtime
+
+
+.. |Build Status| image:: https://travis-ci.org/srault95/radicalspam.svg?branch=master
+   :target: https://travis-ci.org/srault95/radicalspam
+   :alt: Travis Build Status
+   
+.. |Build Doc| image:: https://readthedocs.org/projects/widukind-dlstats/badge/?version=latest
+   :target: http://widukind-dlstats.readthedocs.org/en/latest/?badge=latest
+   :alt: Documentation Status   
+   
+.. |Gitter| image:: https://badges.gitter.im/srault95/radicalspam.svg
+   :alt: Join the chat at https://gitter.im/srault95/radicalspam
+   :target: https://gitter.im/srault95/radicalspam?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge      
 

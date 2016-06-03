@@ -4,7 +4,14 @@
 DEBIAN_FRONTEND=noninteractive
 AMAVIS_VERSION=${AMAVIS_VERSION:-2.11.0}
 
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
 apt-get update && apt-get install -y --no-install-recommends \
+ build-essential \
+ python3-dev \
+ python3-setuptools \
  ca-certificates \
  curl \
  wget \
@@ -39,7 +46,13 @@ apt-get update && apt-get install -y --no-install-recommends \
  postgrey \
  postfix \
  redis-server \
- rep
+ rep \
+ syslog-ng-mod-mongodb \
+ mongodb-org
+ 
+#TODO: mongodb-org mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools 
+
+curl -k https://bootstrap.pypa.io/get-pip.py | python3 -
 
 wget http://www.ijs.si/software/amavisd/amavisd-new-${AMAVIS_VERSION}.tar.xz \
   && tar -Jxvf amavisd-new-${AMAVIS_VERSION}.tar.xz \

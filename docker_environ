@@ -18,6 +18,19 @@ MY_TRANSPORT=relay:[127.0.0.1]:2500
 # Commentez pour désactiver le greylisting
 GREYLIST_HOST=127.0.0.1:10023
 
+# MongoDB: URL d'accès au serveur mongo
+RSADMIN_MONGODB_URL=mongodb://localhost/radicalspam
+
+# WEB: Adresse ip:port sur lequel l'application web répondra
+RSADMIN_HOST=0.0.0.0:8080
+
+# Login/Password du compte admin
+RSADMIN_BASIC_AUTH_USERNAME=admin
+RSADMIN_BASIC_AUTH_PASSWORD=admin
+    
+# TODO: key    
+#RSADMIN_SECRET_KEY="very very secret key key key"
+
 ### Paramètres secondaires
 
 # Nombre d'instance Amavis (1 par cpu/coeur)
@@ -26,8 +39,8 @@ AMAVIS_MAX_SERVERS=4
 # Taille limite en octets des message acceptés (10 Mo)
 MESSAGE_SIZE_LIMIT=10485760
 
-# Valeurs possible: 127.0.0.1:6379
-REDIS_SERVER=/var/run/redis/redis.sock
+# Valeurs possible: 127.0.0.1:6379 | /var/run/redis/redis.sock
+REDIS_SERVER=127.0.0.1:6379
 
 ### Paramètres Optionnels
 
@@ -49,3 +62,4 @@ CLEANUP_QUARANTINE=no
 CLEANUP_QUARANTINE_VIRUS=5
 CLEANUP_QUARANTINE_BANNED=15
 CLEANUP_QUARANTINE_SPAM=0
+
