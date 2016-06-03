@@ -42,13 +42,17 @@ ADD scripts/postfix.sh /etc/service/postfix/run
 ADD scripts/redis.sh /etc/service/redis/run
 ADD scripts/postgrey.sh /etc/service/postgrey/run
 
+ADD tools /usr/local/tools/
+ADD radicalspam.cron /usr/local/etc
+
 RUN chmod +x /etc/service/freshclam/run \
 	/etc/service/clamd/run \
 	/etc/service/spamd/run \
 	/etc/service/amavis/run \
 	/etc/service/postfix/run \
 	/etc/service/redis/run \
-	/etc/service/postgrey/run
+	/etc/service/postgrey/run \
+	/usr/local/tools/*
 
 WORKDIR /var/log
 

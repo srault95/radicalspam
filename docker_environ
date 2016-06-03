@@ -39,3 +39,13 @@ REDIS_SERVER=/var/run/redis/redis.sock
 # autre interface que eth0
 #BIND_SMTP_TRANSPORT=172.17.42.1
 
+### Cron tasks
+
+# Remplacer par yes pour activer le nettoyage automatique
+CLEANUP_QUARANTINE=no
+
+# Nombre de jours avant la suppression de fichiers en quarantaine
+# 0 pour désactiver la suppression
+CLEANUP_QUARANTINE_VIRUS=5
+CLEANUP_QUARANTINE_BANNED=15
+CLEANUP_QUARANTINE_SPAM=0

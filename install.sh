@@ -52,3 +52,5 @@ adduser clamav amavis
 adduser amavis clamav
 adduser debian-spamd amavis
 adduser amavis debian-spamd
+
+ln -sf /usr/local/etc/radicalspam.cron /etc/cron.d/radicalspam

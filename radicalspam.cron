@@ -1,0 +1,7 @@
+
+
+# Amavis tmp cleanup - all days - 02H00 AM
+0 2 * * * root /usr/local/tools/cleanup-tmp.sh >/dev/null 1>&2
+
+# Amavis quarantine cleanup - all days - 02H30 AM
+30 2 * * * root /usr/local/tools/cleanup-quarantine.sh >/dev/null 1>&2
