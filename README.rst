@@ -18,66 +18,64 @@ Radical-Spam
 * Razor
 * Pyzor
 * Web UI
-* Syslog intégré avec enregistrement des logs dans MongoDB
+* Serveur Syslog
+* Enregistrement des logs dans MongoDB
 * Mise à jour automatique des signatures virales et des règles anti-spam
 
 ======
 Requis
 ======
 
-* 10 Go minimum (selon durée de stockage) 
+* 10 Go minimum (selon la durée de stockage) 
 * 4 Go RAM minimum (8 Go conseillé)
 * Serveur Docker 1.10+ (testé avec docker 1.10.3 sur Ubuntu 14.04 OVH)
 * Accès root
 
-===============================
-Démarrage rapide en 6 commandes
-===============================
+================
+Démarrage rapide
+================
 
-**1. Créez un répertoire d'installation:**
+*RadicalSpam sera installé dans /home/rs4 mais vous pouvez choisir un autre emplacement*
+
+**Télécharger le projet à partir de Github:**
 
 *Adaptez le chemin selon votre serveur*
 
 .. code-block:: bash
     
-    $ mkdir /home/rs4 && cd /home/rs4
+    $ git clone https://github.com/srault95/radicalspam.git /home/rs4
     
-**2. Générez l'image docker de base:**
-
-.. code-block:: bash    
-
-    $ docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial:image
-
-**3. Générez l'image de RadicalSpam**
-
-.. code-block:: bash    
+    $ cd /home/rs4
     
-    $ docker build -t rs/radicalspam:4.0.0 https://github.com/srault95/radicalspam.git
+**Editez le fichier ./docker_environ:**
 
-**4. Editez le fichier ./docker_environ:**
-
-*Personnalisez la configuration selon votre architecture*
+*Personnalisez la configuration selon votre architecture et vos besoins*
 
 .. code-block:: bash    
 
-    $ curl -L -O https://raw.githubusercontent.com/srault95/radicalspam/master/docker_environ    
     $ vi docker_environ
     
-**5. Démarrez RadicalSpam:**
+**Générer l'image et lancez RadicalSpam**
 
-.. code-block:: bash    
+.. code-block:: bash
     
-    $ docker run -d --net host --pid=host --name rs4 \
-       --env-file=./docker_environ \
-       rs/radicalspam:4.0.0
+    $ sh ./docker-run.sh
 
-**6. Affichez les logs:**
+**Affichez les logs:**
 
-*Il faut quelques minutes pour le premier démarrage*
+*Il faut quelques minutes pour le premier démarrage et il est normal d'y trouver quelques errors et warning*
 
 .. code-block:: bash    
 
-    $ docker logs rs4
+    $ docker logs radicalspam
+    
+**Ouvrez l'interface d'administration:**
+
+.. code-block:: 
+
+    http://VOTRE_IP_PUBLIQUE:8080
+    
+    Le login et mot de passe se trouve dans le fichier ./docker_environ    
     
 =====================
 Tests de Radical-Spam
@@ -199,40 +197,6 @@ Tests de messages entrants (en provenance d'internet)
         -s 127.0.0.1:25 --xclient 'ADDR=1.1.1.1' \
         --from sender@example.org --to myuser@radical-spam.com \
         --attach-type text/plain --attach /tmp/mail-spam-gtube.txt
-
-=====================================
-Astuce - Stockage externe des données
-=====================================
-
-Vous pouvez externaliser les répertoires de données à l'aide des volumes docker.
-
-.. code-block:: bash
-
-    $ mkdir /home/rs4 && cd /home/rs4
-    docker run -d \
-       --net host --name rs4 \
-       --env-file=./docker_environ \
-       -v $PWD/store/amavis:/var/lib/amavis \
-       -v $PWD/store/clamav:/var/lib/clamav \
-       -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
-       -v $PWD/store/postfix/config:/etc/postfix/local \
-       -v $PWD/store/mongodb/data:/var/lib/mongodb \
-       rs/radicalspam:4.0.0
-       
-Si vous devez réinstaller Radical-Spam, il suffira de copier le répertoire store/ 
-et de lancer à nouveau `docker run`.       
-
-=====================================
-Astuce - Synchronisation de l'horloge
-=====================================
-
-Pour synchroniser la timezone avec celle de l'hôte:
-
-.. code-block:: bash
-
-    # Executer le docker run en ajoutant le volume suivant:
-    -v /etc/localtime:/etc/localtime
-
 
 .. |Build Status| image:: https://travis-ci.org/srault95/radicalspam.svg?branch=master
    :target: https://travis-ci.org/srault95/radicalspam
