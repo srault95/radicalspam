@@ -11,3 +11,4 @@ dist
 build
 archives/
 TODO-*.rst
+.webassets-cache
