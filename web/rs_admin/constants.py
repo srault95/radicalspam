@@ -10,3 +10,11 @@ SESSION_THEME_KEY = "current_theme"
 
 COL_SESSION = "session_web"
 
+COL_SYSLOG = "syslog"
+
+"""
+> db.syslog.distinct("priority")
+[ "notice", "info", "warning" ]
+> db.syslog.distinct("facility")
+[ "syslog", "user", "mail", "authpriv", "cron", "local0" ]
+"""

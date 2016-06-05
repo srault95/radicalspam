@@ -5,7 +5,9 @@ import os
 
 from pymongo import ASCENDING, DESCENDING
 from pymongo import MongoClient
-
+from pymongo import TEXT
+import IPy
+from gevent.wsgi import WSGIServer
 import arrow
 
 from rs_admin import constants
@@ -19,17 +21,14 @@ def get_mongo_url():
     return constants.MONGODB_URL.strip('"')
 
 def get_mongo_client(url=None, connect=False):
-    # TODO: tz_aware
     url = url or get_mongo_url()
-    client = MongoClient(url, connect=connect)
+    client = MongoClient(url, connect=connect, tz_aware=True)
     return client
 
 def get_mongo_db(url=None, **kwargs):
-    # TODO: tz_aware
     url = url or get_mongo_url()
     client = get_mongo_client(url, **kwargs)
     return client.get_default_database()
-
 
 def create_or_update_indexes(db, force_mode=False, background=True):
     """Create or update MongoDB indexes"""
@@ -39,10 +38,17 @@ def create_or_update_indexes(db, force_mode=False, background=True):
     if not force_mode and UPDATE_INDEXES:
         return
 
-    db[constants.COL_COUNTERS].create_index([
-        ("name", ASCENDING)], 
-        name="name_idx", unique=True, background=background)
+    db[constants.COL_SYSLOG].create_index([
+        ("date", DESCENDING)], 
+        name="date_idx",
+        background=background)
 
+    db[constants.COL_SYSLOG].create_index([
+        ("$**", TEXT)], 
+        name="full_text",
+        #TODO: weights={"MESSAGE": 1, "PROGRAM": 1, "PRIORITY":1}, 
+        background=background)
+    
     UPDATE_INDEXES = True
 
 def utcnow():
@@ -101,4 +107,55 @@ def stats():
     except Exception as err:
         logger.error(str(err))
         return {}
+        
+class SecureWSGIServer(WSGIServer):
+    
+    def __init__(self, listener, application=None,
+                 security_by_host=False, allow_hosts=None,
+                 **kwargs):
+        WSGIServer.__init__(self, listener, application=application, **kwargs)
+        self._security_by_host = security_by_host
+        self._allow_hosts = allow_hosts
+    
+    def handle(self, socket, address):
+        if self._security_by_host and not self._security_check(address):                
+            socket.close()
+            return
+        
+        WSGIServer.handle(self, socket, address)
+        
+    def _security_check(self, address):
+        """
+        fail2ban: 2015-02-21 09:57:05 [5972] [CRITICAL] reject host [127.0.0.1]
+        """
+                
+        if not self._security_by_host:
+            return True
+        
+        if not self._allow_hosts:
+            return True
+        
+        try:
+            host = address[0]
+            host_ipy = IPy.IP(host)
+
+            for ip in self._allow_hosts:
+                
+                allow = IPy.IP(ip)
+                
+                if allow.len() == 1:
+                    if ip == host:
+                        return True
+                else:
+                    if host_ipy in allow:
+                        return True
+
+            logger.critical("reject host [%s]" % host)
+            return False
+        
+        except Exception as err:
+            logger.error(str(err))
+        
+        return False
+        
         

@@ -1,0 +1,55 @@
+{% extends "base_form.html" %}
+
+{% block page %}
+
+<div class="container-fluid">
+
+	<div class="panel panel-default col-md-4">
+		<div class="panel-header">
+			<h3>{{_("Etat des services")}}</h3>
+		</div>
+   		<table id="services" class="table table-condensed table-bordered">
+   			<thead>
+   				<th>Service</th>
+   				<th>Status</th>
+   				<th>Error</th>   				
+   				<th>&nbsp;</th>
+   			</thead>
+   			<tbody>
+   				{% for service, state in services.items() %}
+   				<tr>
+   					<td class="col-md-1">{{service}}</td>
+   					<td class="col-md-1">
+   						{% if state.state == "UP" %}
+   						<button type="button" class="btn btn-success btn-xs btn-block">UP</button>
+   						{% elif state.state == "DOWN" %}
+						<button type="button" class="btn btn-danger btn-xs btn-block">DOWN</button>
+   						{% else %}
+						<button type="button" class="btn btn-warning btn-xs btn-block">UNKNOW</button>
+   						{% endif %}
+   					</td>
+   					<td class="col-md-1">
+   						{% if state.is_error %}
+   						<button type="button" class="btn btn-danger btn-xs btn-block">ERROR</button>
+   						{% else %}
+   						&nbsp;
+   						{% endif %}
+   					</td>
+   					<td class="col-md-1">
+   						{% if state.state == "UP" %}
+   						<a class="btn btn-primary btn-xs btn-block" href="{{ url_for('.services-start', service=service) }}">Start</a>
+   						{% elif state.state == "DOWN" %}
+   						<a class="btn btn-primary btn-xs btn-block"  href="{{ url_for('.services-stop', service=service) }}">Stop</a>
+   						{% else %}
+   						&nbsp;
+   						{% endif %}
+   					</td>
+				</tr>   				
+   				{% endfor %}
+   			</tbody>
+   		</table>
+	</div>
+</div>
+
+{% endblock page %}
+

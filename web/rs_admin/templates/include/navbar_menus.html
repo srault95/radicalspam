@@ -1,14 +1,19 @@
-		        {% if is_logged() %}
-		        <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-settings fa-fw"></i> Admin <span class="caret"></span>
-                    </a>
-					<ul class="dropdown-menu">
-						{#
-						<li><a href="{{ url_for("admin.datasets-disable") }}">All Disable Datasets</a></li>
-						#}												
-					</ul>
-		        </li>
-		        {% endif %}
+<li>
+    <a href="{{ url_for(".logs-search") }}"><i class="fa fa-database fa-fw"></i> {{ _('Logs') }}</a>
+</li>
+<li>
+    <a href="{{ url_for(".services-status") }}"><i class="fa fa-database fa-fw"></i> {{ _('Services') }}</a>
+</li>
 
+{#
+<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    	<i class="fa fa-settings fa-fw"></i> Logs <span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+		<a href="{{ url_for(".logs-search") }}"><i class="fa fa-database fa-fw"></i> {{ _('Recherche') }}</a>
+	</ul>
+</li>
+#}
+		        
 		        

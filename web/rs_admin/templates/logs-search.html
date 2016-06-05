@@ -1,0 +1,269 @@
+{% extends "base_form.html" %}
+
+{% block page %}
+
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-2">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+				    	<div class="panel-body">
+				    			    	
+							<form id="search_form">
+
+								<div class="form-group">
+									<label class="control-label" for="created">Période:</label>
+									<input type="text" id="created" name="created" class="form-control input-sm"/>
+								</div>
+
+								<div class="form-group">
+									<div class="input-group margin-bottom-sm">
+										<span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+										<input type="search" id="search" name="search" class="form-control input-sm" placeholder="Text search" />
+									</div>										
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label" for="limit">Limit:</label>
+									<select id="limit" name="limit" class="form-control input-sm">
+										<option value="0">{{_('Sans limite')}}</option>
+										<option value="50">50</option>
+										<option value="100" selected="true">100</option>
+										<option value="200">200</option>
+										<option value="500">500</option>
+										<option value="1000">1000</option>
+									</select>
+								</div>
+									
+						        <div class="form-group">
+						            <input type="submit" id="submit" class="btn btn-default btn-sm btn-block" value="{{_('Search')}}" />
+						        </div>
+						        <div class="form-group">
+						            <input type="submit" id="reset" class="btn btn-default btn-sm btn-block" value="{{_('Reset')}}" />
+						        </div>
+							</form>
+							
+				    	</div>
+				    </div>
+				</div>
+			</div>		
+		</div>
+		
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-12">
+				
+		    		<table id="infos" class="table table-condensed">
+		    			<tbody>
+		    				<tr>
+		    					<td class="col-md-1 info">Count</td>
+		    					<td class="col-md-3">
+		    						<span id="total_result" class="human-number">0</span>
+		    					</td>
+		    					<td class="col-md-1 active">&nbsp;</td>
+		    					<td class="col-md-7">
+		    						<small><a href="" id="jsonURL">&nbsp;</a></small>
+		    					</td>
+		    				</tr>
+		    			</tbody>
+		    		</table>
+			    </div>
+			</div>
+			
+			<div class="row">
+			    <div class="col-md-12">
+
+				<div class="panel panel-default">
+
+					<div class="panel panel-body">
+					
+						{#
+				        <div id="toolbar">
+				            <button id="checkAll" class="btn btn-default">checkAll</button>
+				            <button id="uncheckAll" class="btn btn-default">uncheckAll</button>
+				            <button id="delete" class="btn btn-default">Supprimer</button>
+				        </div>
+				        #}
+				        				
+						<table class="table" id="table" 
+							data-locale="fr-FR"
+							data-classes="table table-hover table-condensed table-bordered"   
+		        			data-striped="true" 
+		        			data-mobile-responsive="true"
+		        			{#data-toolbar="#toolbar"#}
+					        data-buttons-align="left"
+					        data-toolbar-align="right"
+					        data-pagination-h-align="left"
+					        data-pagination-detail-h-align="right"
+					        data-pagination-v-align="top"
+					        data-pagination="true" 
+					        data-page-size="{{ page_size|default('10') }}"
+					        data-page-list="[10, 25, 50, 100]"  
+							>
+						<thead>
+						    <tr>
+						    	{#
+						    	<th data-checkbox="true" class="styled"></th>
+						    	<th data-field="_id" data-visible="false"></th>
+					            <th data-field="seqnum" data-sortable="true">{{_('Num.')}}</th>
+						    	#}
+				                <th data-field="date" data-sortable="true" data-formatter="dateFormatter" data-align="center">{{_('Date')}}</th>
+					            <th data-field="program" data-sortable="true">{{_('Programme')}}</th>
+					            <th data-field="priority" data-sortable="true">{{_('Priorité')}}</th>
+				                <th data-field="facility" data-sortable="true" data-title-tooltip="Syslog Facility">{{_('Facilité')}}</th>
+				                <th data-field="message" data-sortable="false" data-formatter="messageFormatter">{{_('Message')}}</th>
+							</tr>
+						</thead>
+						</table>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+</div>
+    
+
+{% endblock page %}
+
+{% block scripts %}
+    {{super()}}
+
+    <script type="text/javascript">
+    
+    function dateFormatter(value, row) {
+        return new String(moment(value).format('YYYY-MM-DD - HH:mm'));
+    }
+    
+    function messageFormatter(value, row) {
+    	return value;
+    	/*
+    	return _.truncate(value, {
+    		  'length': 50,
+    		  //'separator': ' '
+    	});
+    	*/
+    }
+
+    $(document).ready(function(){
+    	
+		var $table = $('#table').bootstrapTable();
+		
+		var selected = [];
+
+	    $(function () {
+	    	
+	    	$('#checkAll').click(function () {
+	            $table.bootstrapTable('checkAll');
+	            //TODO: all pages
+	            //$table.bootstrapTable('togglePagination').bootstrapTable('checkAll').bootstrapTable('togglePagination');
+	        });
+	    	$('#uncheckAll').click(function () {
+	            $table.bootstrapTable('uncheckAll');
+	            //TODO: all pages
+	            //$table.bootstrapTable('togglePagination').bootstrapTable('uncheckAll').bootstrapTable('togglePagination');
+	        });
+	    	
+	    	/*
+	        $('#delete').click(function () {
+	            var index = [];
+	            var selected = $table.bootstrapTable('getData');
+	            console.log("selected : ", selected);
+	            $('input[name="btSelectItem"]:checked').each(function () {
+	                index.push(selected[$(this).data('index')]._id);
+	            });
+	            console.log('Checked : ', index);
+	        });
+	    	*/
+	    });    
+	    
+    	$('#limit').chosen();
+		var limit = $('#limit').val();
+		var count_series = 0;
+
+		var today = moment();
+		
+		$('#created').daterangepicker({
+			alwaysShowCalendars: false,
+	        ranges: {
+	            "Aujourd'hui": [moment(), moment()],
+	            'Hier': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	            'Dernière semaine': [moment().subtract(6, 'days'), moment()],
+	            'Ce mois': [moment().startOf('month'), moment().endOf('month')],
+	            'Dernier mois': [moment().subtract(1, 'month'), moment()]
+	         }				
+		});
+		$('#created').data('daterangepicker').setStartDate(today);
+		$('#created').data('daterangepicker').setEndDate(today);
+		
+  		var drp = $('#created').data('daterangepicker');
+		
+	    function loadData(options){
+	  		var url = "{{url_for('.logs-search')}}";
+	  		var options = options || {};
+	  		
+	  		options.limit = limit;
+	  		options.startDate = drp.startDate.format('YYYY-MM-DD');
+	  		options.endDate = drp.endDate.format('YYYY-MM-DD');
+	  		
+	  		ajax(url, 'GET', options).done(function(data) {
+	        	$table.bootstrapTable('load', data.data);
+	            $("#total_result").text(Humanize.formatNumber(data.meta.total));
+	            count_series = data.meta.total;
+	  		});
+	  		
+	  	};
+    	
+        var $search_form = $('#search_form').formValidation({
+            framework: 'bootstrap',
+            excluded: [':disabled'],
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            live: 'disabled',
+            fields: {
+                search: {
+                    validators: {
+                        stringLength: {
+                            min: 3,
+                            //message: 'The name must be more than 3 characters long'
+                        },
+                    }
+                },
+                created: {
+                    validators: {
+                        notEmpty: {
+                            //message: 'The search is required'
+                        },
+                    }
+                },
+            },
+        })
+        .on('err.field.fv', function(e, data) {
+        	data.fv.disableSubmitButtons(false);
+        })
+        .on('success.field.fv', function(e, data) {
+        	data.fv.disableSubmitButtons(false);
+        })
+        .on('success.form.fv', function(e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var $button = $form.data('formValidation').getSubmitButton();
+            if ($button.attr('id') == 'reset'){
+            	$form.data('formValidation').resetField('search', true);
+            	$form.data('formValidation').resetForm();
+            }
+            loadData($form.serialize());
+        });
+        
+        loadData();
+		
+    });
+    
+    </script>
+    
+{% endblock %}
+    

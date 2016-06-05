@@ -104,6 +104,10 @@ def main(create_app_func=None):
                         host = '0.0.0.0',
                         port=8081)
         )
+        manager.add_command("debug-server", Server(
+                        host = '0.0.0.0',
+                        port=8081)
+        )
     else:
         manager.add_command("server", Server(
                         host = '0.0.0.0',

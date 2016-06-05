@@ -1,4 +1,4 @@
-Flask>=0.10.1,<0.11
+Flask
 arrow
 gevent>=1.1.1
 python-decouple
@@ -14,3 +14,5 @@ psutil
 Flask-Assets
 jsmin
 cssmin
+IPy
+Flask-Babel

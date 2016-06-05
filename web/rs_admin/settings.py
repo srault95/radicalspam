@@ -6,6 +6,7 @@ gettext = lambda s: s
 class Config(object):
     
     BOOTSTRAP_SERVE_LOCAL = True
+    TEMPLATES_AUTO_RELOAD = True
     
     MONGODB_URL = config('RSADMIN_MONGODB_URL', 'mongodb://localhost/radicalspam')
     

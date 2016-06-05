@@ -5,10 +5,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 from werkzeug.contrib.fixers import ProxyFix
-from flask import Flask, request, abort, session, g, redirect, url_for, render_template, current_app
+from flask import Flask, request, session, render_template, current_app
 from decouple import config as config_from_env
-
-import gevent
 
 from rs_admin import extensions
 from rs_admin import constants
@@ -144,14 +142,24 @@ def _conf_db(app):
     from rs_admin.utils import create_or_update_indexes
     app.db = get_mongo_db(app.config.get("MONGODB_URL"), connect=False)
     app.fs = gridfs.GridFS(app.db)
-    #create_or_update_indexes(app.db)
+    create_or_update_indexes(app.db)
 
 def _conf_default_views(app):
     
-    from rs_admin.views import index
-    app.add_url_rule('/', 'home', index)
+    from rs_admin import views
+    views.set_routes(app)
+
+def _conf_ssl(app):
+    """
+    Dans manager ?
+    """
+    pass
 
 def _conf_auth(app):
+    """
+    TODO: github auth
+    TODO: pam auth ?
+    """
     extensions.auth.init_app(app)
     
     @app.context_processor
@@ -174,20 +182,15 @@ def _conf_mail(app):
 def _conf_processors(app):
 
     @app.context_processor
-    def cart():
-        cart = session.get("cart", [])
-        return dict(cart=cart, cart_count=len(cart))
-
-    @app.context_processor
-    def bookmark():
-        bookmark = session.get("bookmark", [])
-        return dict(bookmark=bookmark, bookmark_count=len(bookmark))
-
-    @app.context_processor
     def functions():
         def _split(s):
             return s.split()
         return dict(split=_split)
+
+    @app.context_processor
+    def server_time():
+        import arrow
+        return dict(server_time=arrow.utcnow().to('local').format('YYYY-MM-DD HH:mm:ss ZZ'))
     
 def _conf_bootstrap(app):
     from flask_bootstrap import Bootstrap
@@ -207,12 +210,16 @@ def _conf_errors(app):
 
     from werkzeug import exceptions as ex
 
-    class DisabledElement(ex.HTTPException):
-        code = 307
-        description = 'Disabled element'
-    abort.mapping[307] = DisabledElement
-
-    @app.errorhandler(307)
+    #class DisabledElement(ex.HTTPException):
+    #    code = 307
+    #    description = 'c'
+    #abort.mapping[307] = DisabledElement
+    #def disable_error(error):
+    #    return 'Disabled element', 307
+    #app.error_handler_spec[None][307] = disable_error
+        
+    #@app.errorhandler(307)
+    """
     def disable_error(error):
         is_json = request.args.get('json') or request.is_xhr
         values = dict(error="307 Error", original_error=error, referrer=request.referrer)
@@ -220,8 +227,10 @@ def _conf_errors(app):
             values['original_error'] = str(values['original_error'])
             return app.jsonify(values), 307
         return render_template('errors/307.html', **values), 307
+    app.error_handler_spec[None][307] = disable_error
+    """
     
-    @app.errorhandler(500)
+    @app.errorhandler(ex.InternalServerError)
     def error_500(error):
         is_json = request.args.get('json') or request.is_xhr
         values = dict(error="Server Error", original_error=error, referrer=request.referrer)
@@ -230,7 +239,7 @@ def _conf_errors(app):
             return app.jsonify(values), 500
         return render_template('errors/500.html', **values), 500
     
-    @app.errorhandler(404)
+    @app.errorhandler(ex.NotFound)
     def not_found_error(error):
         is_json = request.args.get('json') or request.is_xhr
         values = dict(error="404 Error", original_error=error, referrer=request.referrer)
@@ -268,6 +277,9 @@ def _conf_assets(app):
         "local/lodash.min.js",
         "local/spin.min.js",
         "local/jquery.spin.js",
+        "local/bootbox.min.js",
+        "local/moment.min.js",
+        "local/moment-fr.js",
     ]
 
     table_css = [
@@ -284,6 +296,7 @@ def _conf_assets(app):
         "local/bootstrap-table-natural-sorting.min.js",
         "local/bootstrap-table-toolbar.min.js",
         "local/bootstrap-table-en-US.min.js",
+        "local/bootstrap-table-fr-FR.min.js",
     ]
     
     form_css = [
@@ -297,6 +310,7 @@ def _conf_assets(app):
         "local/daterangepicker.min.js",
         "local/formValidation.min.js",
         "local/formvalidation-bootstrap.min.js",
+        "local/formvalidation-fr_FR.min.js",
         "local/chosen.jquery.min.js",
         "local/mustache.min.js",
         #"local/jquery.sparkline.min.js",
@@ -349,6 +363,9 @@ def _conf_assets(app):
         assets.manifest = 'cache' if not app.debug else False
         assets.debug = False #app.debug
         #print(assets['common_css'].urls())
+        
+def _conf_babel(app):
+    extensions.babel.init_app(app)        
     
 def create_app(config='rs_admin.settings.Prod'):
     
@@ -388,6 +405,8 @@ def create_app(config='rs_admin.settings.Prod'):
     _conf_mail(app)
     
     _conf_assets(app)
+    
+    _conf_babel(app)
     
     app.wsgi_app = ProxyFix(app.wsgi_app)
     

@@ -14,7 +14,7 @@ auth = BasicAuth()
 mail = Mail()
 
 try:
-    from flask_babelex import Babel, lazy_gettext, gettext, _
+    from flask_babel import Babel, lazy_gettext, gettext, _
     babel = Babel()
     #_ = lambda s: s
     #gettext = lambda s: s
