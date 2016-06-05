@@ -37,7 +37,7 @@ ADD clamav/freshclam.conf /etc/clamav/
 ADD clamav/clamav-unofficial-sigs.conf /etc/
 ADD redis/redis.conf /etc/redis/
 ADD web/gunicorn_conf.py /usr/local/etc/gunicorn_conf
-ADD syslog-ng.conf /etc/syslog-ng/
+ADD syslog-ng/syslog-ng.conf /etc/syslog-ng/
 
 ADD scripts/freshclam.sh /etc/service/freshclam/run
 ADD scripts/clamd.sh /etc/service/clamd/run
@@ -50,7 +50,7 @@ ADD scripts/rs-admin.sh /etc/service/rs-admin/run
 ADD scripts/mongodb.sh /etc/service/mongodb/run
 
 ADD tools /usr/local/tools/
-ADD radicalspam.cron /usr/local/etc
+ADD cron/radicalspam.cron /usr/local/etc
 
 RUN chmod +x /etc/service/freshclam/run \
 	/etc/service/clamd/run \
@@ -73,4 +73,5 @@ WORKDIR /var/log
 
 CMD ["/sbin/my_init"]
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /code
+RUN apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /code /usr/local/bin/install.sh 
