@@ -1,22 +1,18 @@
 #!/bin/bash
 
+curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/awesome-bootstrap-checkbox/0.3.7/awesome-bootstrap-checkbox.min.css
-curl -OL http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css
-curl -OL https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2-spinner.gif
-curl -OL https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.png
-curl -OL https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2x2.png
-curl -OL http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2-bootstrap.min.css
 
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.19/daterangepicker.min.css
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/css/formValidation.min.css
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css
-curl -OL https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen-sprite.png
-curl -OL https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen-sprite@2x.png
+curl -OL http://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen-sprite.png
+curl -OL http://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen-sprite@2x.png
 
-curl -OL http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.19/daterangepicker.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/formValidation.min.js
-curl http://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/framework/bootstrap.min.js -o formvalidation-bootstrap.min.js 
+curl -L -o formvalidation-bootstrap.min.js http://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/framework/bootstrap.min.js
+curl -L -o formvalidation-fr_FR.min.js http://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/language/fr_FR.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js    
@@ -36,6 +32,7 @@ curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/extensions
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/extensions/natural-sorting/bootstrap-table-natural-sorting.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/extensions/toolbar/bootstrap-table-toolbar.min.js
 curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/locale/bootstrap-table-en-US.min.js
+curl -OL http://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/locale/bootstrap-table-fr-FR.min.js
 
 mkdir css fonts
 curl http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css -o css/font-awesome.min.css 
@@ -54,6 +51,7 @@ curl -O http://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js
 curl -O http://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js.map
 curl -O http://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js
 curl -O http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js
+curl -o moment-fr.js http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/locale/fr.js
 
 curl -OL http://dygraphs.com/1.1.1/dygraph-combined.js
 curl -O http://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js 
