@@ -45,16 +45,16 @@ ADD syslog-ng/syslog-ng.conf /etc/syslog-ng/
 ADD cron/radicalspam.cron /usr/local/etc
 
 ADD tools /usr/local/tools/
-RUN chmod +x /usr/local/tools/*
-
 ADD scripts /scripts/
-
 ADD supervisord.conf /etc/supervisor/
+
 RUN echo "alias ctl='supervisorctl -c /etc/supervisor/supervisord.conf'" >> /root/.bashrc \
     && mkdir -p /var/log/supervisor \
-    && mkdir /etc/service/supervisor \
-    && ln -sf /scripts/supervisor.sh /etc/service/supervisor/run 
-
+    && mkdir -p /etc/service/supervisor \
+    && ln -sf /scripts/supervisor.sh /etc/service/supervisor/run \
+    && chmod +x /usr/local/tools/* \
+    && chmod +x /scripts/*
+ 
 ADD web /code/
 WORKDIR /code/
 RUN pip install -r requirements/default.txt \
