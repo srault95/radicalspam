@@ -12,7 +12,7 @@ bind = env_config('RSADMIN_HOST', '0.0.0.0:8080')
 
 daemon = False
 
-chdir = "/code"
+#chdir = "/code"
 
 preload = env_config('RSADMIN_PRELOAD', False, cast=bool)
 
@@ -30,7 +30,7 @@ worker_connections = env_config('RSADMIN_WORKER_CONNECTIONS', 200, cast=int)
 
 backlog = env_config('RSADMIN_BACKLOG', 2048, cast=int)
 
-timeout = env_config('RSADMIN_TIMEOUT', 30, cast=int)
+timeout = env_config('RSADMIN_TIMEOUT', 60, cast=int)
 
 keepalive = env_config('RSADMIN_KEEPALIVE', 2, cast=int)
 
