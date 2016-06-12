@@ -210,26 +210,6 @@ def _conf_errors(app):
 
     from werkzeug import exceptions as ex
 
-    #class DisabledElement(ex.HTTPException):
-    #    code = 307
-    #    description = 'c'
-    #abort.mapping[307] = DisabledElement
-    #def disable_error(error):
-    #    return 'Disabled element', 307
-    #app.error_handler_spec[None][307] = disable_error
-        
-    #@app.errorhandler(307)
-    """
-    def disable_error(error):
-        is_json = request.args.get('json') or request.is_xhr
-        values = dict(error="307 Error", original_error=error, referrer=request.referrer)
-        if is_json:
-            values['original_error'] = str(values['original_error'])
-            return app.jsonify(values), 307
-        return render_template('errors/307.html', **values), 307
-    app.error_handler_spec[None][307] = disable_error
-    """
-    
     @app.errorhandler(ex.InternalServerError)
     def error_500(error):
         is_json = request.args.get('json') or request.is_xhr
