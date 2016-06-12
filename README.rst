@@ -61,13 +61,30 @@ Démarrage rapide
     
     $ sh ./docker-run.sh
 
-**Affichez les logs:**
+**Affichez les logs et vérifier les services:**
 
 *Il faut quelques minutes pour le premier démarrage et il est normal d'y trouver quelques errors et warning*
 
 .. code-block:: bash    
 
     $ docker logs radicalspam
+    
+    $ docker exec -it rs4 bash -c "/usr/bin/sv status /etc/service/*"
+    
+    run: /etc/service/amavis: (pid 29363) 1368s
+    run: /etc/service/clamd: (pid 29361) 1368s
+    run: /etc/service/cron: (pid 29369) 1368s
+    run: /etc/service/freshclam: (pid 29359) 1368s
+    run: /etc/service/mongodb: (pid 29362) 1368s
+    run: /etc/service/postfix: (pid 27537) 1s
+    run: /etc/service/postgrey: (pid 29374) 1368s
+    run: /etc/service/redis: (pid 29367) 1368s
+    run: /etc/service/rs-admin: (pid 27566) 0s
+    run: /etc/service/spamd: (pid 29375) 1368s
+    down: /etc/service/sshd: 1368s
+    run: /etc/service/syslog-forwarder: (pid 29372) 1368s
+    run: /etc/service/syslog-ng: (pid 29364) 1368s
+    
     
 **Ouvrez l'interface d'administration:**
 
