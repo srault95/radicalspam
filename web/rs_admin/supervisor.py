@@ -510,7 +510,7 @@ class SupervisorRestAPI(object):
         
         server_url = self.app.config.get('SUPERVISOR_URL', 'http://127.0.0.1:9001/RPC2') #'unix:///var/run/supervisor.sock')
         
-        self._client = SupervisorAPI(serverurl=server_url, debug=self.app.debug)
+        self._client = SupervisorAPI(serverurl=server_url)#, debug=self.app.debug)
         
         self._create_blueprint()
 
