@@ -77,6 +77,8 @@ postmap /etc/postfix/local/directory
 postmap /etc/postfix/local/transport
 postmap /etc/postfix/local/mynetworks
 
+cd /etc/postfix
+
 /usr/sbin/postfix check 1>&2 || exit 1
 
 exec /usr/lib/postfix/sbin/master -c /etc/postfix -d
