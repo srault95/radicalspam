@@ -205,6 +205,8 @@ def _conf_bp(app):
     app.register_blueprint(views.bp, url_prefix='/views')
     app.register_blueprint(admin.bp, url_prefix='/_cepremap/admin')
     """
+    from rs_admin.supervisor import SupervisorRestAPI
+    app.supervisor = SupervisorRestAPI(app)
 
 def _conf_errors(app):
 

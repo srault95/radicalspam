@@ -80,6 +80,6 @@ postmap /etc/postfix/local/mynetworks
 
 cd /etc/postfix
 
-/usr/sbin/postfix check 1>&2 || exit 1
+/usr/sbin/postfix -c /etc/postfix check 1>&2
 
 exec /usr/lib/postfix/sbin/master -c /etc/postfix -d

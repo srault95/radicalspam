@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir /var/run/redis
+mkdir -p /var/run/redis
 
 chown redis /var/run/redis
 

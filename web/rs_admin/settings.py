@@ -16,6 +16,8 @@ class Config(object):
         
     SENTRY_DSN = config('RSADMIN_SENTRY_DSN', None)
     
+    SUPERVISOR_URL = config('RSADMIN_SUPERVISOR_URL', 'http://127.0.0.1:9001/RPC2')
+    
     #---Flask-Babel
     TIMEZONE = "UTC"#"Europe/Paris" 
     DEFAULT_LANG = "en"
