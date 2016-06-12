@@ -579,8 +579,8 @@ class SupervisorRestAPI(object):
         @auth.required
         @xmlrpc_error
         def all_process_info():
-            return self.client.all_process_info()
-            #return jsonify(**self.client.all_process_info())
+            #return self.client.all_process_info()
+            return jsonify(**self.client.all_process_info())
         
         #@cache.cached(timeout=5)
         @self._bp.route('/process/<string:process_name>', endpoint='process')
