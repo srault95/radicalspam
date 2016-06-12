@@ -51,7 +51,7 @@ ADD scripts /scripts/
 
 ADD supervisord.conf /etc/supervisor/
 RUN echo "alias ctl='supervisorctl -c /etc/supervisor/supervisord.conf'" >> /root/.bashrc \
-    && mkdir -p /var/log/supervisor
+    && mkdir -p /var/log/supervisor \
     && mkdir /etc/service/supervisor \
     && ln -sf /scripts/supervisor.sh /etc/service/supervisor/run 
 
