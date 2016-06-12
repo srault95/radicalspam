@@ -37,9 +37,10 @@
    					</td>
    					<td class="col-md-1">
    						{% if state.state == "UP" %}
-   						<a class="btn btn-primary btn-xs btn-block" href="{{ url_for('.services-start', service=service) }}">Start</a>
-   						{% elif state.state == "DOWN" %}
    						<a class="btn btn-primary btn-xs btn-block"  href="{{ url_for('.services-stop', service=service) }}">Stop</a>
+   						<a class="btn btn-primary btn-xs btn-block"  href="{{ url_for('.services-reload', service=service) }}">Reload</a>
+   						{% elif state.state == "DOWN" %}
+   						<a class="btn btn-primary btn-xs btn-block" href="{{ url_for('.services-start', service=service) }}">Start</a>
    						{% else %}
    						&nbsp;
    						{% endif %}

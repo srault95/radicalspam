@@ -67,6 +67,7 @@ CMD_SV = "/usr/bin/sv"
 CMD_SV_STATUS = "%s status" % CMD_SV
 CMD_SV_START = "%s up" % CMD_SV
 CMD_SV_STOP = "%s down" % CMD_SV
+CMD_SV_RELOAD = "%s hup" % CMD_SV
 
 SV_PID = "/etc/service/%s/supervise/pid"
 SV_STATUS = "/etc/service/%s/supervise/stat"
@@ -129,6 +130,9 @@ def service_start(service):
 
 def service_stop(service):
     return sv_command('%s /etc/service/%s' % (CMD_SV_STOP, service), service)
+
+def service_reload(service):
+    return sv_command('%s /etc/service/%s' % (CMD_SV_RELOAD, service), service)
 
 def service_status(service=None):
     if service:

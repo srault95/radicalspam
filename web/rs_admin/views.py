@@ -98,6 +98,11 @@ def view_services_start(service):
     #TODO: flash
     return redirect(url_for(".services-status"))
 
+def view_services_reload(service):
+    status = admin_tools.service_reload(service)
+    #TODO: flash    
+    return redirect(url_for(".services-status"))
+
 def view_services_stop(service):
     status = admin_tools.service_stop(service)
     #TODO: flash
