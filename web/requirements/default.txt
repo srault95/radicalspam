@@ -16,3 +16,4 @@ jsmin
 cssmin
 IPy
 Flask-Babel
+envoy
