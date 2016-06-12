@@ -16,7 +16,6 @@ RUN echo "postfix postfix/root_address string root@example.net" | debconf-set-se
 RUN echo "postfix postfix/mynetworks string 172.17.0.0/24" | debconf-set-selections
 
 RUN rm -f /etc/cron.daily/logrotate
-
 #RUN rm -f /etc/service/sshd/down \
 #    && /etc/my_init.d/00_regen_ssh_host_keys.sh
 # --enable-insecure-key
@@ -43,14 +42,18 @@ ADD clamav/clamav-unofficial-sigs.conf /etc/
 ADD redis/redis.conf /etc/redis/
 ADD web/gunicorn_conf.py /usr/local/etc/gunicorn_conf
 ADD syslog-ng/syslog-ng.conf /etc/syslog-ng/
+ADD cron/radicalspam.cron /usr/local/etc
 
 ADD tools /usr/local/tools/
-ADD cron/radicalspam.cron /usr/local/etc
-ADD scripts /scripts/
-ADD services.sh /usr/local/tools/
-
 RUN chmod +x /usr/local/tools/*
-RUN /usr/local/tools/services.sh
+
+ADD scripts /scripts/
+
+ADD supervisord.conf /etc/supervisor/
+RUN echo "alias ctl='supervisorctl -c /etc/supervisor/supervisord.conf'" >> /root/.bashrc \
+    && mkdir -p /var/log/supervisor
+    && mkdir /etc/service/supervisor \
+    && ln -sf /scripts/supervisor.sh /etc/service/supervisor/run 
 
 ADD web /code/
 WORKDIR /code/
@@ -60,7 +63,7 @@ RUN pip install -r requirements/default.txt \
 
 WORKDIR /var/log
 
-CMD ["/sbin/my_init", "--skip-runit", "runsv", "/etc/service/start"]
+#CMD ["/sbin/my_init", "--skip-runit", "runsv", "/etc/service/start"]
 
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /code /usr/local/bin/install.sh 

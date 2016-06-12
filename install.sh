@@ -49,7 +49,8 @@ apt-get update && apt-get install -y --no-install-recommends \
  redis-server \
  rep \
  syslog-ng-mod-mongodb \
- mongodb-org
+ mongodb-org \
+ supervisor
  
 #TODO: mongodb-org mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools 
 
