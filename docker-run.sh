@@ -25,6 +25,7 @@ check_disk() {
   if [ "$free_disk" -lt 5000 ]; then
     echo "WARNING: RadicalSpam requires at least 5GB free disk space. This system"
     echo "does not appear to have sufficient disk space."
+  fi
 }
 
 check_port() {
@@ -43,11 +44,14 @@ check_port "8080"
         
 docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial:image
 
-docker inspect rs/base-image hostname 2>/dev/null 1>&2
+docker inspect rs/base-image:xenial 2>/dev/null 1>&2
 if [ "$?" != "0" ]; then
 	echo "The base image for radicalspam is not ready. Error[$?]"
 	exit 1
 fi   
+
+#docker rmi -f ${DOCKER_IMAGE}
+#docker rm -v ${CT_NAME}
 
 docker build -t ${DOCKER_IMAGE} .
 
