@@ -1,5 +1,6 @@
 #!/bin/bash
-#set -e
+
+set -e
 
 DEBIAN_FRONTEND=noninteractive
 AMAVIS_VERSION=${AMAVIS_VERSION:-2.11.0}
