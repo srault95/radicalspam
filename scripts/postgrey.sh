@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir -p /var/lib/postgrey
 
 chown postgrey.postgrey /var/lib/postgrey

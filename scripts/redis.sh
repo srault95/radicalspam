@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir /var/run/redis
 
 chown redis /var/run/redis

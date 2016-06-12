@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd /var/lib/mongodb
 
 chown -R mongodb .

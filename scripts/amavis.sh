@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir -vp /var/lib/amavis/{tmp,db,var,quarantine,policies}
 mkdir -vp /var/lib/amavis/quarantine/{virus,banned,spam,archives,clean}
 touch /var/lib/amavis/local_domains

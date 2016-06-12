@@ -1,5 +1,6 @@
 #!/bin/bash
-exec 1>&2
+
+set -e
 
 mkdir -p /etc/postfix/local
 
@@ -82,4 +83,3 @@ cd /etc/postfix
 /usr/sbin/postfix check 1>&2 || exit 1
 
 exec /usr/lib/postfix/sbin/master -c /etc/postfix -d
-
