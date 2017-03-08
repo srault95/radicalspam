@@ -25,86 +25,61 @@ from bson import ObjectId
 
 from rs_admin import json_tools
 from rs_admin import constants
-from rs_admin import admin_tools
+#from rs_admin import admin_tools
 
 def index():
     return render_template("index.html")
 
-TEST_SERVICES = {'amavis': {'duration': 0,
-            'is_error': False,
-            'output': 'run: /etc/service/amavis: (pid 27893) 135713s\n',
-            'pid': 27893,
-            'state': 'DOWN',
-            'status_code': 0},
- 'clamd': {'duration': 0,
-           'is_error': True,
-           'output': 'run: /etc/service/clamd: (pid 24408) 917s\n',
-           'pid': None,
-           'state': 'UNKNOW',
-           'status_code': 1},
- 'cron': {'duration': 0,
-          'is_error': False,
-          'output': 'run: /etc/service/cron: (pid 27890) 135713s\n',
-          'pid': 27890,
-          'state': 'UP',
-          'status_code': 0},
- 'freshclam': {'duration': 0,
-               'is_error': False,
-               'output': 'run: /etc/service/freshclam: (pid 27888) 135713s\n',
-               'pid': 27888,
-               'state': 'UP',
-               'status_code': 0},
- 'mongodb': {'duration': 0,
-             'is_error': False,
-             'output': 'run: /etc/service/mongodb: (pid 6851) 19011s\n',
-             'pid': 6851,
-             'state': 'UP',
-             'status_code': 0},
- 'postfix': {'duration': 0,
-             'is_error': False,
-             'output': 'run: /etc/service/postfix: (pid 27894) 135713s\n',
-             'pid': 27894,
-             'state': 'UP',
-             'status_code': 0},
- 'postgrey': {'duration': 0,
-              'is_error': False,
-              'output': 'run: /etc/service/postgrey: (pid 31798) 132682s\n',
-              'pid': 31798,
-              'state': 'UP',
-              'status_code': 0},
- 'redis': {'duration': 0,
-           'is_error': False,
-           'output': 'run: /etc/service/redis: (pid 27898) 135713s\n',
-           'pid': 27898,
-           'state': 'UP',
-           'status_code': 0},
- 'spamd': {'duration': 0,
-           'is_error': False,
-           'output': 'run: /etc/service/spamd: (pid 27892) 135713s\n',
-           'pid': 27892,
-           'state': 'UP',
-           'status_code': 0}}
-
 def view_services_status():
+    _services = current_app.supervisor.all_process_info()
+    services = {}
+    for service, v in _services.items():
+        if service in constants.HIDDEN_SERVICES:
+            continue
+        
+        v['start'] = arrow.get(v['start']).datetime
+        v['stop'] = arrow.get(v['stop']).datetime
+        services[service] = v
+                  
+    """
+    >>> arrow.get(1465769270)
+    <Arrow [2016-06-12T22:07:50+00:00]>
+    
+    TODO: byssh
     if sys.platform in ["win32"]:
         services = TEST_SERVICES
     else:
         services = admin_tools.service_status()
-           
+    """           
     return render_template("services.html", services=services)
 
+"""
+MANQUE logique pour ordre de démarrage dans les dépendances
+- START: coté, préciser la liste des services qui vont êtres lancé avant
+- STOP: ceux qui vont être arrêté
+    - postfix: aucun
+    - clamav: amavis, freshclam?
+    - amavis: clamav 
+
+"""
+
 def view_services_start(service):
-    status = admin_tools.service_start(service)
+    result = current_app.supervisor.process_start(service)
+    #TODO: flash
+    return redirect(url_for(".services-status"))
+
+def view_services_restart(service):
+    result = current_app.supervisor.process_restart(service)
     #TODO: flash
     return redirect(url_for(".services-status"))
 
 def view_services_reload(service):
-    status = admin_tools.service_reload(service)
+    result = current_app.supervisor.process_reload(service)
     #TODO: flash    
     return redirect(url_for(".services-status"))
 
 def view_services_stop(service):
-    status = admin_tools.service_stop(service)
+    result = current_app.supervisor.process_stop(service)
     #TODO: flash
     return redirect(url_for(".services-status"))
 
@@ -198,3 +173,11 @@ def set_routes(app):
     app.add_url_rule('/services/<service>/stop', 
                      endpoint='services-stop', 
                      view_func=view_services_stop)
+
+    app.add_url_rule('/services/<service>/restart', 
+                     endpoint='services-restart', 
+                     view_func=view_services_restart)
+
+    app.add_url_rule('/services/<service>/reload', 
+                     endpoint='services-reload', 
+                     view_func=view_services_reload)

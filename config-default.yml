@@ -1,0 +1,73 @@
+
+settings:
+    domains:
+        - example.org
+    
+
+# MongoDB: URL d'accès au serveur mongo
+mongodb:
+    url: mongodb://localhost/radicalspam
+
+mta:
+    # Nom du MX postfix
+    hostname: mx1.example.org    
+
+    # Votre domaine principal
+    domain: example.org
+
+    # Adresse email du compte root
+    root_email: root@example.org
+
+    # Adresse autorisé à envoyer des mails 
+    mynetwork: 127.0.0.1
+
+    # Adresse IP/Port de livraison des mails en interne
+    transport: relay:[127.0.0.1]:2500
+    
+    # Décommentez, pour renvoyer tous les mails vers un autre serveur
+    relayhost: 
+    #relayhost: [127.0.0.1]:2500
+    
+    # Taille limite en octets des message acceptés (10 Mo)
+    size_limit: 10485760
+
+    # Bind l'ip de postfix pour l'envoi des mails
+    # Utile quand vous avez plusieurs IP et que souhaitez utiliser une
+    # autre interface que eth0
+    # ex: smtp_bind: 172.17.42.1
+    smtp_bind: 
+    
+policy:
+    host: 127.0.0.1:10023
+    
+rs_admin:
+    # Adresse sur laquelle l'application web répondra
+    host: 0.0.0.0
+    port: 8080
+    secret_key: very very secret key key key
+    auth:
+        # Login/Password du compte admin
+        type: basic
+        username: admin
+        password: admin
+    worker: 2
+    syslog: true
+
+filter:
+    # Nombre d'instance Amavis (1 par cpu/coeur)
+    instances: 4
+
+redis:
+    host: 127.0.0.1
+    port: 6379
+    url: redis://127.0.0.1:6379
+
+cron:
+    # Remplacer par true pour activer le nettoyage automatique
+    cleanup_quarantine: 
+        enable: false
+        # Nombre de jours avant la suppression de fichiers en quarantaine
+        # 0 pour désactiver la suppression
+        delay_virus: 5
+        delay_banned: 15
+        delay_spam: 0

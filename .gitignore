@@ -12,3 +12,10 @@ build
 archives/
 TODO-*.rst
 .webassets-cache
+web/rs_admin/static/local/common.css
+web/rs_admin/static/local/common.js
+web/rs_admin/static/local/form.css
+web/rs_admin/static/local/form.js
+web/rs_admin/static/local/table.css
+web/rs_admin/static/local/table.js
+/ansible*

@@ -37,12 +37,10 @@
                 {% block menu_left %}&nbsp;{% endblock %}
             </div>
             <div id="site_content" {% block site_content_attrs %}class="col-md-12"{% endblock %}>
-	            <span id="spinner" class="spinner-container"></span>
 	            {% block breadcrumb %}{% endblock %}
 	            {% block page %}{% endblock %}
             </div>
 	    </div>
-	    {% include "include/messages.html" with context %}
 	</div>     
 {% endblock content %}
 
@@ -50,38 +48,25 @@
     {% assets "common_js" %}
 	    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    {#
     {{ moment.include_moment(local_js=url_for('static', filename="local/moment.min.js")) }}
-    {{ moment.lang("fr") }}
-    #}
+    {#{{ moment.lang("fr") }}#}
     <script type="text/javascript">
     	moment.locale('fr');
     </script>
+
 	<script type="text/javascript" src="{{ url_for('static', filename="script.js") }}"></script>
-       
+	
 <script type="text/javascript">
-
-//var $table;
-
-$(document).ajaxStart(function() {
-    spinnerShow();
-}).ajaxStop(function() {
-    spinnerHide();
-}).ajaxError(function() {
-    spinnerHide();
-});
 
 $(document).ready(function() {
     
-    $('.human-number').each(function(i, item){
-        var value = $(item).text();
-         $(item).text(Humanize.formatNumber(value));
-    });
-
-    $('.human-size-mb').each(function(i, item){
-        var value = $(item).text();
-         $(item).text(Humanize.fileSize(value));
-    });
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}        
+          toastr['{{category}}']("{{message}}");
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
         
 });
 </script>

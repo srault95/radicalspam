@@ -195,6 +195,11 @@ def _conf_processors(app):
 def _conf_bootstrap(app):
     from flask_bootstrap import Bootstrap
     Bootstrap(app)
+    
+def _conf_supervisor(app):
+
+    from rs_admin.supervisor import SupervisorAPI
+    app.supervisor = SupervisorAPI(serverurl=app.config.get('SUPERVISOR_URL'))
 
 def _conf_bp(app):
     """
@@ -205,8 +210,8 @@ def _conf_bp(app):
     app.register_blueprint(views.bp, url_prefix='/views')
     app.register_blueprint(admin.bp, url_prefix='/_cepremap/admin')
     """
-    from rs_admin.supervisor import SupervisorRestAPI
-    app.supervisor = SupervisorRestAPI(app)
+    #from rs_admin.supervisor import SupervisorRestAPI
+    #app.supervisor = SupervisorRestAPI(app)
 
 def _conf_errors(app):
 
@@ -250,6 +255,7 @@ def _conf_assets(app):
         "local/bootstrap-3.3.6/css/bootstrap.min.css",
         "local/bootstrap-3.3.6/css/bootstrap-theme.min.css",
         "local/font-awesome.min.css",
+        "local/toastr.min.css",
     ]
     
     common_js = [
@@ -257,11 +263,11 @@ def _conf_assets(app):
         "local/bootstrap-3.3.6/js/bootstrap.min.js",
         "local/humanize.min.js",
         "local/lodash.min.js",
-        "local/spin.min.js",
-        "local/jquery.spin.js",
         "local/bootbox.min.js",
         "local/moment.min.js",
         "local/moment-fr.js",
+        "local/toastr.min.js",
+        "local/jquery.blockUI.min.js"
     ]
 
     table_css = [
@@ -300,6 +306,7 @@ def _conf_assets(app):
     ] + table_js
 
     #TODO: export    
+    """
     table_export_js = [
         'bootstrap-table/extensions/export/bootstrap-table-export.min.js',    
         'bootstrap-table/extensions/flat-json/bootstrap-table-flat-json.min.js',
@@ -311,6 +318,7 @@ def _conf_assets(app):
         'table-export/jspdf/jspdf.js',
         'table-export/jspdf/libs/base64.js'
     ]
+    """
     
     #274Ko
     common_css_bundler = Bundle(*common_css, 
@@ -379,6 +387,8 @@ def create_app(config='rs_admin.settings.Prod'):
     _conf_default_views(app)
     
     _conf_bp(app)
+    
+    _conf_supervisor(app)
     
     _conf_processors(app)
     

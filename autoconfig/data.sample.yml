@@ -1,0 +1,11 @@
+apps:
+  postfix:
+    domains:    # key : /postfix/domains
+        - xxx
+  clamav:
+    clamd:
+      TCPSocket: 3310
+      LogSyslog: true
+      ExcludePUA:
+       - Packed
+        

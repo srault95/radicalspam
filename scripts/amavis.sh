@@ -15,7 +15,10 @@ touch /var/lib/amavis/debug_senders
 touch /var/lib/amavis/inet_socket_port
 grep 10024 /var/lib/amavis/inet_socket_port || echo "10024" >> /var/lib/amavis/inet_socket_port
 
-grep ${MY_DOMAIN} /var/lib/amavis/local_domains 2>/dev/null 1>&2 || echo "${MY_DOMAIN}" >> /var/lib/amavis/local_domains
+#grep ${MY_DOMAIN} /var/lib/amavis/local_domains 2>/dev/null 1>&2 || echo "${MY_DOMAIN}" >> /var/lib/amavis/local_domains
+
+tplconfig -C $(RADICALSPAM_CFG) -i /etc/radicalspam/templates/amavis/99-radicalspam.tpl -o /etc/amavis/conf.d/99-radicalspam
+tplconfig -C $(RADICALSPAM_CFG) -i /etc/radicalspam/templates/amavis/local_domains.tpl -o /var/lib/amavis/local_domains
 
 if [ ! -e /var/lib/amavis/.razor/identity ]; then
 	gosu amavis bash -c "razor-admin -create"

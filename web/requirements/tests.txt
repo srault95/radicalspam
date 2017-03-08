@@ -1,5 +1,0 @@
-Flask-Testing
-httpretty
-nose
-coverage
-flake8

@@ -18,3 +18,6 @@ COL_SYSLOG = "syslog"
 > db.syslog.distinct("facility")
 [ "syslog", "user", "mail", "authpriv", "cron", "local0" ]
 """
+
+PROTECTED_SERVICES = ["rs-admin", "syslog-ng", "mongodb", "redis"]
+HIDDEN_SERVICES = "start"

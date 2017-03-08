@@ -1,6 +1,8 @@
-FROM rs/base-image:xenial
+FROM srault95/baseimage-docker:xenial
 
-ENV GOSU_VERSION 1.7
+ENV RADICALSPAM_CFG /etc/radicalspam/config.yml
+
+ENV GOSU_VERSION 1.9
 ENV AMAVIS_VERSION 2.11.0
 ENV MY_HOSTNAME mx.example.net
 ENV MY_DOMAIN localhost.net
@@ -31,6 +33,9 @@ RUN rm -rf /etc/spamassassin/* /etc/cron.daily/spamassassin \
   && chmod +x /usr/local/bin/gosu \
   && gosu nobody true
 
+ADD config-default.yml /etc/radicalspam/config.yml
+#ADD templates /etc/radicalspam/templates/
+
 ADD postfix/master-amavis.tmpl /etc/postfix/
 ADD spamassassin/etc/* /etc/spamassassin/
 ADD spamassassin/cron/spamassassin /etc/cron.daily/spamassassin
@@ -43,6 +48,7 @@ ADD redis/redis.conf /etc/redis/
 ADD web/gunicorn_conf.py /usr/local/etc/gunicorn_conf
 ADD syslog-ng/syslog-ng.conf /etc/syslog-ng/
 ADD cron/radicalspam.cron /usr/local/etc
+ADD rs-mta/rs-mta.yml /etc/rs-mta/
 
 ADD tools /usr/local/tools/
 ADD scripts /scripts/
@@ -55,15 +61,18 @@ RUN echo "alias ctl='supervisorctl -c /etc/supervisor/supervisord.conf'" >> /roo
     && chmod +x /usr/local/tools/* \
     && chmod +x /scripts/*
  
-ADD web /code/
-WORKDIR /code/
-RUN pip install -r requirements/default.txt \
-    && pip install https://github.com/benoitc/gunicorn/tarball/master \
-    && pip install --no-deps .
+ADD web /code/web/
+WORKDIR /code/web
+RUN pip install https://github.com/benoitc/gunicorn/tarball/master \
+    && pip install --no-deps . \
+
+#    && pip install https://github.com/srault95/rs-mta/tarball/master
+
+ADD autoconfig /code/autoconfig/
+WORKDIR /code/autoconfig
+RUN pip install .
 
 WORKDIR /var/log
-
-#CMD ["/sbin/my_init", "--skip-runit", "runsv", "/etc/service/start"]
 
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /code /usr/local/bin/install.sh 

@@ -34,7 +34,7 @@ fi
 #postconf -e 'inet_interfaces = 127.0.0.1'
 #mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 
-grep 'smtp-amavis' /etc/postfix/master.cf || cat /etc/postfix/master-amavis.tmpl >> /etc/postfix/master.cf
+grep 'smtp-filter' /etc/postfix/master.cf || cat /etc/postfix/master-amavis.tmpl >> /etc/postfix/master.cf
 
 if [ -z "${GREYLIST_HOST}" ]; then
 	sv down /etc/service/postgrey
@@ -48,7 +48,7 @@ if [ -e /etc/postfix/local/filters ]; then
 	postconf -e "content_filter="
 	postmap /etc/postfix/local/filters
 else
-	postconf -e "content_filter = smtp-amavis:[127.0.0.1]:10024"
+	postconf -e "content_filter = smtp-filter:[127.0.0.1]:10024"
 	postconf -e "smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, ${ACTIVE_POSTGREY} defer_unauth_destination"
 fi
 

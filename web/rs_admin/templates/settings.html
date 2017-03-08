@@ -1,0 +1,59 @@
+{% extends "base_form.html" %}
+
+{% block page %}
+<!--
+SETTINGS: 
+mta: config postfix
+    - mynetworks
+    - relays (liste domaine)
+    - transport
+    - directory
+quarantine:
+notifications
+-->
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading nopadding">
+            <ul id="infosnavbar" class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#tab-mta" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> MTA
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#tab-virus" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> Anti-Virus
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#tab-spam" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> Anti-Spam
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#tab-quarantine" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> Quarantaine
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#tab-greylist" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> Greylisting
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#tab-web" role="tab" data-toggle="tab">
+                        <i class="fa fa-info-circle fa-fw"></i> WEB
+                    </a>
+                </li>
+            </ul>
+        </div><!-- //panel-heading -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade" id="tab-cart">
+            </div><!-- //tabpanel tab-cart -->
+        </div><!-- //tab-content -->
+    </div>
+</div>
+{% endblock page %}
+
+

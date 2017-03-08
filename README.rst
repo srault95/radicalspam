@@ -69,7 +69,7 @@ Démarrage rapide
 
     $ docker logs radicalspam
     
-    $ docker exec -it rs4 bash -c "/usr/bin/sv status /etc/service/*"
+    $ docker exec -it radicalspam bash -c "/usr/bin/sv status /etc/service/*"
     
     run: /etc/service/amavis: (pid 29363) 1368s
     run: /etc/service/clamd: (pid 29361) 1368s

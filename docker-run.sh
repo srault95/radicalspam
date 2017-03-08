@@ -42,13 +42,13 @@ check_disk
 check_port "25"
 check_port "8080"
         
-docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial:image
+#docker build -t rs/base-image:xenial https://github.com/srault95/baseimage-docker.git#base-ubuntu-xenial:image
 
-docker inspect rs/base-image:xenial 2>/dev/null 1>&2
-if [ "$?" != "0" ]; then
-	echo "The base image for radicalspam is not ready. Error[$?]"
-	exit 1
-fi   
+#docker inspect rs/base-image:xenial 2>/dev/null 1>&2
+#if [ "$?" != "0" ]; then
+#	echo "The base image for radicalspam is not ready. Error[$?]"
+#	exit 1
+#fi   
 
 #docker rmi -f ${DOCKER_IMAGE}
 #docker rm -v ${CT_NAME}

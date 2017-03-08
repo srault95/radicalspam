@@ -477,6 +477,14 @@ class SupervisorAPI(object):
         success = self.server.supervisor.startProcess(process_name, wait)
         return dict(success=success)
     
+    def process_reload(self, process_name):
+        success = self.server.supervisor.signalProcess(process_name, 1) #SIGHUP
+        return dict(success=success)
+    
+    def process_restart(self, process_name, wait=True):
+        success = self.server.supervisor.stopProcess(process_name, wait)
+        success = self.server.supervisor.startProcess(process_name, wait)
+        return dict(success=success)
     
 class SupervisorRestAPI(object):
     """
