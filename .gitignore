@@ -14,3 +14,4 @@ site.retry
 TODO*
 fabfile.*
 old*
+store/
