@@ -1,8 +1,10 @@
 ---
 
 - hosts: all
-  gather_facts: no
-  remote_user: ubuntu
+  gather_facts: yes
+  #remote_user: ubuntu
+  #--extra-vars "remote_user=root"
+  remote_user: '{{ remote_user|default("ubuntu") }}'
   become: yes
   roles:
     - commons
@@ -10,8 +12,9 @@
     - raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
 
 - hosts: radicalspam
-  gather_facts: yes
-  remote_user: ubuntu
+  gather_facts: no
+  #remote_user: ubuntu
+  remote_user: '{{ remote_user|default("ubuntu") }}'
   become: yes
   roles:
     - syslog

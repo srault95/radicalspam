@@ -20,7 +20,7 @@
 	cd radicalspam
 	ansible-playbook radicalspam.yml
 
-### Par un Ansible intégré dans une image Docker
+### Ansible intégré dans une image Docker
 
 	docker pull williamyeh/ansible:alpine3
 	git clone https://github.com/srault95/radicalspam

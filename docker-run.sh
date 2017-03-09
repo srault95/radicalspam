@@ -47,9 +47,9 @@ check_port "8080"
 #docker rmi -f ${DOCKER_IMAGE}
 #docker rm -v ${CT_NAME}
 
-docker build -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} .
+docker build -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
 
-docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest
+docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
 
 docker run -d \
    --name ${CT_NAME} \
