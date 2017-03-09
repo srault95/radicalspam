@@ -8,14 +8,11 @@ ENV ANSIBLE_DEBUG false
 ENV ANSIBLE_TIMEOUT 10
 
 ENV REQUIREMENTS	requirements.yml
-ENV PLAYBOOK		${PLAYBOOK:-radicalspam.yml}
+ENV PLAYBOOK		radicalspam.yml
 ENV INVENTORY		inventory.ini
-ENV VERBOSE 		${VERBOSE:-} #-vvvv
 
-RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost" ${VERBOSE}
+RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
 
 EXPOSE 25/tcp 465/tcp
-
-RUN touch /var/log/empty.log
 
 CMD ["/usr/bin/radicalspam-start"]

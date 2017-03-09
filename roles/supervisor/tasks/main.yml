@@ -1,0 +1,7 @@
+- name: supervisor install
+  apt: name=supervisor state=latest install_recommends=no
+  tags: install
+
+- name: supervisor config
+  template: src=templates/supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf backup=yes
+  tags: config
