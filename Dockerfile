@@ -5,14 +5,14 @@ ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_RETRY_FILES_ENABLED false
 ENV ANSIBLE_BECOME false
 ENV ANSIBLE_DEBUG false
-ENV ANSIBLE_VERBOSITY 0
 ENV ANSIBLE_TIMEOUT 10
 
 ENV REQUIREMENTS	requirements.yml
 ENV PLAYBOOK		${PLAYBOOK:-radicalspam.yml}
 ENV INVENTORY		inventory.ini
+ENV VERBOSE 		${VERBOSE:-} #-vvvv
 
-RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
+RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost" ${VERBOSE}
 
 EXPOSE 25/tcp 465/tcp
 

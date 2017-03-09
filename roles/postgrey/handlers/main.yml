@@ -1,3 +1,0 @@
-- name: restart postgrey
-  service: name=postgrey state=restarted
-

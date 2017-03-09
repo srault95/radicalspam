@@ -1,0 +1,5 @@
+- name: install swaks
+  apt: name=swaks state=latest install_recommends=no
+  tags: 
+    - install
+    - test

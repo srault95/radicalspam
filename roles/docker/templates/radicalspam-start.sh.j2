@@ -24,7 +24,7 @@ sa_update() {
 		su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
 	fi
 	
-    service clamav-daemon restart
+    service spamassassin restart
 	
 }
 

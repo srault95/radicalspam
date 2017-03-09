@@ -11,14 +11,6 @@
   when: clamav_unofficial_sigs_enable
   tags: install
       
-- name: Start clamav service
-  service: name=clamav-daemon state=started enabled=true
-  tags: service
-
-- name: Start freshclam service
-  service: name=clamav-freshclam state=started enabled=true
-  tags: service
-
 - name: clamav clamd config
   template: src=templates/clamd.conf.j2 dest=/etc/clamav/clamd.conf backup=yes
   tags: config
@@ -26,6 +18,36 @@
 - name: clamav freshclam config
   template: src=templates/freshclam.conf.j2 dest=/etc/clamav/freshclam.conf backup=yes
   tags: config
-  notify: restart clamav
-
         
+- name: clamav load sigs
+  shell: |
+    echo "Update clamav sigs"
+    freshclam -c 1
+    echo "Update clamav unofficial-sigs"
+    if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
+      /usr/sbin/clamav-unofficial-sigs
+    fi
+    chown clamav.clamav -R /var/lib/clamav
+  when: ansible_virtualization_type != "docker"
+  tags: config
+  
+- name: clamav-daemon is running and service enabled
+  service: name=clamav-daemon state=restarted enabled=yes
+  when: ansible_virtualization_type != "docker"
+  tags: service
+    
+- name: docker clamav-daemon is not running and service disabled
+  service: name=clamav-daemon state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"
+  tags: service
+    
+- name: clamav-freshclam is running and service enabled
+  service: name=clamav-freshclam state=restarted enabled=yes
+  when: ansible_virtualization_type != "docker"
+  tags: service
+    
+- name: docker clamav-freshclam is not running and service disabled
+  service: name=clamav-freshclam state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"
+  tags: service
+

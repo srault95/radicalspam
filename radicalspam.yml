@@ -18,11 +18,11 @@
   become: yes
   roles:
     - syslog
+    - fail2ban
     - postfix
-    - postgrey
     - clamav
     - spamassassin
-    - amavis
-    - fail2ban
-    - scripts
+    - { role: postgrey, when: postgrey_enable }
+    - { role: amavis, when: amavis_enable }
+    - { role: docker, when: ansible_virtualization_type == "docker" }
   

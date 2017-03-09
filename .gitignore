@@ -13,3 +13,4 @@ archives/
 site.retry
 TODO*
 fabfile.*
+old*

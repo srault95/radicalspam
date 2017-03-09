@@ -1,4 +1,4 @@
-- name: Install spamassassin
+- name: spamassassin install
   apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - spamassassin
@@ -7,28 +7,47 @@
     - pyzor
   tags: install
 
-- name: SA channels config
+- name: spamassassin channels config
   template: src=templates/channels.txt.j2 dest=/etc/spamassassin/channels.txt backup=no
   tags: config
 
-- name: SA myconfig
+- name: spamassassin myconfig
   template: src=templates/z_01_my_config.cf.j2 dest=/etc/spamassassin/z_01_my_config.cf backup=no
   tags: config
 
-- name: SA myrules
+- name: spamassassin myrules
   template: src=templates/z_02_my_rules.cf.j2 dest=/etc/spamassassin/z_02_my_rules.cf backup=no
   tags: config
 
-- name: SA myscore
+- name: spamassassin myscore
   template: src=templates/z_99_my_score.cf.j2 dest=/etc/spamassassin/z_99_my_score.cf backup=no
   tags: config
 
-- name: enable spamassassin
+- name: spamassassin enable
   lineinfile: dest=/etc/default/spamassassin regexp=^ENABLED= line=ENABLED=1
-  tags: install
+  tags: config  
 
-- name: enable spamassassin CRON
+- name: spamassassin enable CRON
   lineinfile: dest=/etc/default/spamassassin regexp=^CRON= line=CRON=1
-  tags: install
-  notify: restart spamassassin
+  tags: config  
   
+- name: spamassassin update
+  shell: |
+    COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
+    if [ $COUNT -lt 1 ]; then
+      su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
+    fi
+  when: ansible_virtualization_type != "docker"
+  tags: config  
+
+- name: spamassassin is running and service enabled
+  service: name=spamassassin state=restarted enabled=yes
+  when: ansible_virtualization_type != "docker"
+  tags: service
+    
+- name: docker spamassassin is not running and service disabled
+  service: name=spamassassin state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"
+  tags: service
+
+        

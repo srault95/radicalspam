@@ -1,2 +1,21 @@
-- name: Installs fail2ban
-  apt: name=fail2ban state=latest install_recommends=no
+- name: fail2ban install
+  apt: name={{item}} state=latest install_recommends=no
+  with_items:
+    - gamin
+    - fail2ban
+  tags: install
+
+#- name: fail2ban configure
+#  template: src=templates/jail.conf.j2 dest=/etc/fail2ban/jail.conf backup=yes
+#  tags: config
+
+- name: fail2ban is running and service enabled
+  service: name=fail2ban state=restarted enabled=yes
+  when: ansible_virtualization_type != "docker"
+  tags: service
+    
+- name: docker fail2ban is not running and service disabled
+  service: name=fail2ban state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"
+  tags: service
+  

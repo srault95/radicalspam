@@ -1,4 +1,4 @@
-- name: Installs postgrey
+- name: postgrey installs
   apt: name=postgrey state=latest install_recommends=no
   when: postgrey_enable
   tags: install
@@ -6,5 +6,16 @@
 - name: postfix config main
   template: src=templates/postgrey.j2 dest=/etc/default/postgrey backup=yes
   when: postgrey_enable
-  notify: restart postgrey
   tags: config
+
+- name: postgrey is running and service enabled
+  service: name=postgrey state=restarted enabled=yes
+  when: postgrey_enable and ansible_virtualization_type != "docker"
+  tags: service
+    
+- name: docker postgrey is not running and service disabled
+  service: name=postgrey state=stopped enabled=no
+  when: postgrey_enable and ansible_virtualization_type == "docker"
+  tags: service
+
+        

@@ -11,6 +11,12 @@
 
 - name: syslog-ng config
   template: src=templates/syslog-ng.conf.j2 dest=/etc/syslog-ng/syslog-ng.conf backup=yes
-  notify: restart syslog-ng
   tags: config
-  
+
+- name: syslog-ng is running and service enabled
+  service: name=syslog-ng state=restarted enabled=yes
+  when: ansible_virtualization_type != "docker"
+    
+- name: docker syslog-ng is not running and service disabled
+  service: name=syslog-ng state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"

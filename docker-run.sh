@@ -51,6 +51,7 @@ docker build -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
 
 docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
 
+#TODO: --privileged ?
 docker run -d \
    --name ${CT_NAME} \
    --net host --pid=host \
