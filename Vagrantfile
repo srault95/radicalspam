@@ -1,9 +1,11 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
 Vagrant.configure(2) do |config|
+
+  	config.vm.provider "virtualbox" do |v|
+    	v.memory = 2048
+    	v.cpus = 2
+	end
 	
-	config.vm.box = "debian/jessie64"
+	config.vm.box = "ubuntu/xenial64"
 
 	config.vm.provision "ansible" do |ansible|
 		ansible.playbook = "radicalspam.yml"
@@ -14,11 +16,10 @@ Vagrant.configure(2) do |config|
 		config.vm.network "private_network", ip: "10.0.0.100"
 	end
 
-	# HTTP
-	config.vm.network "forwarded_port", guest: 80, host: 1080
-	# HTTPS
-	config.vm.network "forwarded_port", guest: 443, host: 1443
 	# SMTP
-	config.vm.network "forwarded_port", guest: 25, host: 1025
+	config.vm.network "forwarded_port", guest: 25, host: 25
+
+	# SMTP TLS
+	config.vm.network "forwarded_port", guest: 465, host: 465
   
 end

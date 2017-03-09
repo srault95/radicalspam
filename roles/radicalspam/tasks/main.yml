@@ -1,7 +1,0 @@
-- name: radicalspam common lib
-  template: src=templates/radicalspam-lib.j2 dest=/usr/local/bin/radicalspam-lib mode=0750 backup=yes
-  tags: config
-
-- name: radicalspam main script
-  template: src=templates/radicalspam.j2 dest=/usr/local/bin/radicalspam mode=0750 backup=yes
-  tags: config

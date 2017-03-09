@@ -1,106 +1,84 @@
-# RadicalSpam
+# RadicalSpam 4
 
-## BUGS
+## Configuration
 
-## TODO
+- La configuration pour tous les serveurs se trouve dans `group_vars/all.yml`
 
-- Testabilité:
+- Pour chaque serveur, vous devez créer un fichier dans `host_vars/MON_SERVER.yml`
 
-	example.net
-	root@example.net
+- Le fichier /etc/ansible/hosts doit contenir la liste des serveurs à déployer
 
-- utiliser inventaire pour définir ressources nécessaires    	
+## Installation
 
-   - Il faut pouvoir mettre à jour la PIL complète et lancer des tests pertinents
-      - Mails entrants/sortants / accept/reject : vérification dans DB
-      - Recherche DNS
-      - Filter SA/CLAMD
-      - Livraison finale / Turing / Quarantaine / Notification (besoin serveur test pop/imap)
+### Directement par Ansible
 
-
-- utiliser psutil pour surveiller process
-- placer tout dans supervisor pour console + xmlrpc ?
-- dns
-- scripts nagios ?
-- iso fonctionnalités sauf lan/wan ?
-- récupération config existante
-	- role migrate
-- script de gestion RS construit à la demande selon config ?	
-- gestion 2 interface: lan/wan ?
-- ufw
-- fail2ban config
-- ln -sf /usr/local/etc/radicalspam.cron /etc/cron.d/radicalspam
-- migration bayes
-- ssl postfix
-
-- voir:
-
-	Mar  8 12:00:23 rs1 postfix[12101]: To disable backwards compatibility use "postconf compatibility_level=2" and "postfix reload"
-
-	Mar  8 13:58:43 rs1 amavis[18108]: OS_Fingerprint code  NOT loaded
-	Mar  8 12:00:16 rs1 amavis[11751]: DKIM code            loaded
-	Mar  8 12:00:16 rs1 amavis[11751]: Tools code           NOT loaded
-	Mar  8 12:00:16 rs1 amavis[11751]: No $altermime,         not using it
-	Mar  8 12:00:16 rs1 amavis[11751]: No decoder for       .7z
-
-
-## Installation with Ansible
-
-	docker run -it --rm -v /etc/ansible:/etc/ansible -w /tmp -v $PWD:/tmp -v /root:/root williamyeh/ansible:alpine3 ansible-playbook /tmp/site.yml --syntax-check
+	apt-get install ansible
+	OU
+	pip install ansible
 	
-	docker run -it --rm -v /etc/ansible:/etc/ansible -w /tmp -v $PWD:/tmp -v /root:/root williamyeh/ansible:alpine3 ansible-playbook /tmp/site.yml -l 'rs1' -vv
-	
-	
-	
+	git clone https://github.com/srault95/radicalspam
+	cd radicalspam
+	ansible-playbook radicalspam.yml
 
-## Installation with Docker
+### Par un Ansible intégré dans une image Docker
+
+	docker pull williamyeh/ansible:alpine3
+	git clone https://github.com/srault95/radicalspam
+	cd radicalspam
+	docker run -it --rm -w /tmp \
+		-v /etc/ansible:/etc/ansible -v $PWD:/tmp -v /root:/root \
+		williamyeh/ansible:alpine3 \
+		ansible-playbook /tmp/radicalspam.yml -l 'rs1' -vv
+
+### Tout dans un container Docker
+
+
+	chmod +x docker-run.sh
+	./docker-run.sh
+	
+	# OU
 
 	docker build -t radicalspam .
-	
-	docker run -d --name radicalspam -p 25:25 -p 465:465 radicalspam 
-	
 	docker run -d \
-	   --net host --name ${CT_NAME} \
-	   --pid=host \
-	   --env-file=./docker_environ \
+	   --name rs4 \
+	   --net host --pid=host \
 	   -v /etc/localtime:/etc/localtime \
-	   -v $PWD/store/amavis:/var/lib/amavis \
+	   -v $PWD/store/amavis/config:/var/lib/amavis/config \
+	   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
+	   -v $PWD/store/postfix/local:/etc/postfix/local \
+	   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
+	   -v $PWD/store/postfix/spool:/var/spool/postfix \
+	   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
+	   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
 	   -v $PWD/store/clamav:/var/lib/clamav \
 	   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
-	   -v $PWD/store/postfix/config:/etc/postfix/local \
-	   -v $PWD/store/postfix/spool:/var/spool/postfix \
-	   -v $PWD/store/redis/data:/var/lib/redis \
-	   -v $PWD/store/postgrey/db:/var/lib/postgrey \
-	   -v $PWD/store/mongodb/data:/var/lib/mongodb \
-	   ${DOCKER_IMAGE}
+	   radicalspam
 		
+### Par Vagrant
 
-## Installation with Vagrant
-
+	git clone https://github.com/srault95/radicalspam
+	cd radicalspam
 	vagrant up
 	
-## Tested Linux distributions
+## Distributions Linux testés
 
 - Ubuntu 16.04 (Xenial)	
 
-## Features
+## Fonctionnalités
 
-- SMTP Server Postfix 3.1.0
-- Clamav 0.99.2 and clamav-unofficial-sigs 
-- Amavisd-new 2.10
-- Spamassassin 3.4.1
-- Razor
-- Pyzor
-- Python 3.5.2
-- Syslog-ng
-- Fail2ban
+- Serveur SMTP Postfix 3.1.0
+- Anti-virus Clamav 0.99.2 avec des signatures supplémentaires 
+- Anti-spam Spamassassin 3.4.1 + Razor/Pyzor
+- Anti-spam Amavisd-new 2.10
+- Serveur Syslog-ng
+- Sécurité Fail2ban
 
-## Features Added
+## TODO
 
+- Tests et adaptations Debian, Autres Ubuntu, Redhat, Alpine
 - MongoDB Server 3.2.6
 - Record and search logs in MongoDB
 - Redis Server 2.3.0
-
 - mongrey ?
 - SSL letsencrypt
 - ufw
@@ -113,22 +91,4 @@
 - opendmarc
 - elk
 - nagios
-
-## Ubuntu 16.04
-
-	cd /home/tmp
-	mkdir xenial && cd xenial
-	docker run -it --rm -v $PWD:/datas ubuntu:xenial
-	
-	#?opendkim
-	#?
-	
-		
-	
-      
-## Alpine
-
-## Debian 8      
-
-## Fedora ?
 

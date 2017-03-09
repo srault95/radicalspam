@@ -16,16 +16,9 @@ COPY . /tmp
 
 RUN ansible-playbook ${ANSIBLE_PLAYBOOK} --connection=local
 
-RUN apt-get clean && rm -rf /etc/apt/sources.list.d/ansible.list /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean \
+	&& rm -rf /etc/apt/sources.list.d/ansible.list /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 25/tcp 465/tcp
-
-VOLUME [
-	"/var/lib/amavis/config",
-	"/var/lib/amavis/virusmails",
-	#"/etc/postgrey",
-	#"/var/lib/postgrey",
-	"/etc/postfix/local", 
-	"/etc/postfix/ssl"]
 
 CMD ["tail", "-f", "/var/log/empty.log"]

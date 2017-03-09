@@ -1,5 +1,5 @@
 - name: Requires by Amavis
-  apt: name={{ item }} state=present install_recommends=no
+  apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - arj
     - cabextract
@@ -23,7 +23,7 @@
   tags: install
 
 - name: Install Amavis
-  apt: name={{ item }} state=present install_recommends=no
+  apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - amavisd-new
     - amavisd-new-postfix
@@ -34,16 +34,16 @@
   tags: service
 
 - name: add clamav in amavis group
-  user: name=clamav state=present groups=amavis
+  user: name=clamav state=latest groups=amavis
 
 - name: add amavis in clamav group
-  user: name=amavis state=present groups=clamav
+  user: name=amavis state=latest groups=clamav
 
 - name: add debian-spamd in amavis group
-  user: name=debian-spamd state=present groups=amavis
+  user: name=debian-spamd state=latest groups=amavis
   
 - name: add amavis in debian-spamd group
-  user: name=amavis state=present groups=debian-spamd
+  user: name=amavis state=latest groups=debian-spamd
 
 - name: amavis create directories
   file: path=/var/lib/amavis/{{item}} state=directory force=yes mode=0770 group=amavis owner=amavis

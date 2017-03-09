@@ -1,5 +1,5 @@
 - name: Install Clamav
-  apt: name={{ item }} state=present install_recommends=no
+  apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - clamav
     - clamav-daemon
@@ -7,7 +7,7 @@
   tags: install
 
 - name: Install unofficial-sigs
-  apt: name=clamav-unofficial-sigs state=present install_recommends=no
+  apt: name=clamav-unofficial-sigs state=latest install_recommends=no
   when: clamav_unofficial_sigs_enable
   tags: install
       

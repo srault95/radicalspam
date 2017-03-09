@@ -1,5 +1,5 @@
 - name: Install spamassassin
-  apt: name={{ item }} state=present install_recommends=no
+  apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - spamassassin
     - sa-compile

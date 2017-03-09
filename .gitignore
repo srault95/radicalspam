@@ -12,3 +12,4 @@ build
 archives/
 site.retry
 TODO*
+fabfile.*
