@@ -1,0 +1,10 @@
+- name: Installs postgrey
+  apt: name=postgrey state=latest install_recommends=no
+  when: postgrey_enable
+  tags: install
+
+- name: postfix config main
+  template: src=templates/postgrey.j2 dest=/etc/default/postgrey backup=yes
+  when: postgrey_enable
+  notify: restart postgrey
+  tags: config

@@ -1,0 +1,12 @@
+---
+
+syslog_udp_enable: false
+
+syslog_maillog_enable: true
+syslog_maillog_pattern: /var/log/mail-$YEAR-$MONTH-$DAY.log
+
+syslog_mongodb_enable: false
+syslog_mongodb_server: localhost:27017
+syslog_mongodb_database: radicalspam
+syslog_mongodb_collection: syslog
+syslog_mongodb_collection_low: syslog_low

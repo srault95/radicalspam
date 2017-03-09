@@ -1,0 +1,16 @@
+---
+# defaults file for clamav-role
+
+clamav_tcp_enable: true
+clamav_tcp_host: 127.0.0.1
+clamav_tcp_port: 3310
+
+clamav_syslog_enable: true
+
+clamav_check: 12
+
+clamav_mirrors:
+  - db.fr.clamav.net
+  - database.clamav.net
+
+clamav_unofficial_sigs_enable: true

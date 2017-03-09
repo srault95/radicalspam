@@ -1,0 +1,42 @@
+- name: Install spamassassin
+  apt: name={{ item }} state=present install_recommends=no
+  with_items:
+    - spamassassin
+    - sa-compile
+    - razor
+    - pyzor
+  tags: install
+
+- name: SA channels config
+  template: src=templates/channels.txt.j2 dest=/etc/spamassassin/channels.txt backup=no
+  tags: config
+
+- name: SA myconfig
+  template: src=templates/z_01_my_config.cf.j2 dest=/etc/spamassassin/z_01_my_config.cf backup=no
+  tags: config
+
+- name: SA myrules
+  template: src=templates/z_02_my_rules.cf.j2 dest=/etc/spamassassin/z_02_my_rules.cf backup=no
+  tags: config
+
+- name: SA myscore
+  template: src=templates/z_99_my_score.cf.j2 dest=/etc/spamassassin/z_99_my_score.cf backup=no
+  tags: config
+
+- name: enable spamassassin
+  lineinfile: dest=/etc/default/spamassassin regexp=^ENABLED= line=ENABLED=1
+  tags: install
+
+- name: enable spamassassin CRON
+  lineinfile: dest=/etc/default/spamassassin regexp=^CRON= line=CRON=1
+  tags: install
+  
+- name: Amavis directories
+  shell: |
+    COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
+    if [ $COUNT -lt 1 ]; then
+      su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
+    fi
+  tags: config
+  notify: restart spamassassin
+  

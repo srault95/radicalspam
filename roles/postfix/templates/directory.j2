@@ -1,0 +1,13 @@
+{% if emails is defined %}
+
+{% for email in emails %}
+{{email}}	OK
+{% endfor %}
+
+{% else %}
+
+{% for domain in domains %}
+@{{domain}}	OK
+{% endfor %}
+
+{% endif %}

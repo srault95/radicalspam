@@ -1,0 +1,6 @@
+#OVH VPS cloud only
+#failover_address:  1.1.1.1
+#failover_name: ens3:0
+
+hostname_fqdn: rs1.example.net
+hostname: rs1

@@ -1,0 +1,9 @@
+timezone: Europe/Paris
+
+domains: 
+  - example.net
+  
+mynetworks:
+  - 127.0.0.1  
+  
+root_email: root@example.net

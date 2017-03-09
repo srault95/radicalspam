@@ -1,0 +1,5 @@
+
+POSTGREY_OPTS="{% if postgrey_bysubnet_enable %}--lookup-by-subnet {% else %}--lookup-by-host {% endif %}--inet={{postgrey_host}}:{{postgrey_port}} --delay={{postgrey_delay}} --max-age={{postgrey_max_age}} --auto-whitelist-clients={{postgrey_auto_wl}} --retry-window={{postgrey_retry}} {% if postgrey_verbose %}--verbose{% endif %}"
+
+POSTGREY_TEXT="{{postgrey_message}}"
+

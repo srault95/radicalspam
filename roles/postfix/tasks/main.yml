@@ -1,0 +1,69 @@
+- name: put hostname to /etc/mailname
+  copy: content="{{hostname_fqdn}}" dest=/etc/mailname backup=no
+
+- name: install postfix
+  apt: name=postfix state=latest install_recommends=no
+  tags: install
+
+- name: be sure postfix is running and enabled
+  service: name=postfix state=running enabled=yes
+
+- name: postfix create local directory
+  file: path=/etc/postfix/local state=directory force=yes mode=0755
+  tags: config
+
+- name: postfix copy empty files
+  copy: src=local/ dest=/etc/postfix/local
+
+#- name: postfix config locals
+#  template: src=templates/{{ item[0] }} dest=/etc/postfix/local/{{ item[1] }}
+#  with_nested:
+#    - ['directory.j2', 'directory']
+#    - ['filters.j2', 'filters']
+#    - ['relay.j2', 'relay']
+#    - ['spoofing.j2', 'spoofing']
+#    - ['transport.j2', 'transport']
+#    - ['verify-recipients.j2', 'verify-recipients']
+#  tags: config
+
+- name: postfix config locals > directory
+  template: src=templates/directory.j2 dest=/etc/postfix/local/directory
+  tags: config
+
+- name: postfix config locals > filters
+  template: src=templates/filters.j2 dest=/etc/postfix/local/filters
+  tags: config
+
+- name: postfix config locals > relays
+  template: src=templates/relays.j2 dest=/etc/postfix/local/relays
+  tags: config
+
+- name: postfix config locals > spoofing
+  template: src=templates/spoofing.j2 dest=/etc/postfix/local/spoofing
+  tags: config
+
+- name: postfix config locals > transport
+  template: src=templates/transport.j2 dest=/etc/postfix/local/transport
+  tags: config
+
+- name: postfix config locals > verify-recipients
+  template: src=templates/verify-recipients.j2 dest=/etc/postfix/local/verify-recipients
+  tags: config
+
+- name: postfix config main
+  template: src=templates/main.cf.j2 dest=/etc/postfix/main.cf backup=yes
+  tags: config
+
+- name: postfix config script
+  template: src=templates/postfix-config.sh.j2 dest=/etc/postfix/local/postfix-config.sh mode=0750 backup=yes
+  tags: config
+
+- name: postfix config master
+  template: src=templates/master.cf.j2 dest=/etc/postfix/master.cf backup=yes
+  tags: config
+      
+- name: postfix finished config
+  shell: /etc/postfix/local/postfix-config.sh
+  notify:
+    - restart postfix
+  tags: config

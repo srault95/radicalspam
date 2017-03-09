@@ -1,0 +1,98 @@
+#smtpd_reject_unlisted_recipient = yes
+#smtpd_reject_unlisted_sender = no
+#mynetworks = 127.0.0.0/8
+#mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+#inet_interfaces = 127.0.0.1
+inet_interfaces = all
+
+smtpd_banner = secure SMTP
+
+message_size_limit = {{message_size_limit}}
+
+recipient_canonical_maps = hash:/etc/postfix/local/canonical-recipient
+
+sender_canonical_maps = hash:/etc/postfix/local/canonical-sender
+
+transport_maps = hash:/etc/postfix/local/transport
+
+relay_domains = \$mydestination, hash:/etc/postfix/local/relays
+
+relay_recipient_maps = hash:/etc/postfix/local/directory
+
+smtpd_delay_reject = yes
+
+smtpd_helo_required = yes
+
+smtpd_delay_open_until_valid_rcpt = yes
+
+biff = no
+
+home_mailbox = .maildir/
+
+mailbox_size_limit = 0
+
+smtp_skip_5xx_greeting = no
+
+smtpd_client_restrictions = 
+	permit_mynetworks, 
+	check_client_access hash:/etc/postfix/local/whitelist-clients, 
+	sleep 2, 
+	check_client_access hash:/etc/postfix/local/blacklist-clients
+	{% if postfix_rbls_client %}, reject_rbl_client {{postfix_rbls_client|join('reject_rbl_client ')}}{% endif %} 
+
+smtpd_helo_restrictions = 
+	check_helo_access hash:/etc/postfix/local/exceptions-helo, 
+	check_helo_access hash:/etc/postfix/local/blacklist-helo 
+	{% if postfix_spoofing_enable %}, check_helo_access hash:/etc/postfix/local/spoofing{% endif %}
+
+smtpd_sender_restrictions = 
+	permit_mynetworks, 
+	check_sender_access hash:/etc/postfix/local/exceptions-senders, 
+	reject_non_fqdn_sender, 
+	{% if postfix_spoofing_enable %}check_sender_access hash:/etc/postfix/local/spoofing, {% endif %}
+	check_sender_access hash:/etc/postfix/local/blacklist-senders
+
+smtpd_recipient_restrictions = 
+	check_recipient_access hash:/etc/postfix/local/blacklist-recipients, 
+	reject_non_fqdn_recipient, 
+	reject_unauth_destination, 
+	{% if postfix_verify_enable %}check_recipient_access hash:/etc/postfix/local/verify-recipients, {% endif %}
+	{% if postgrey_enable %}check_policy_service inet:{{postgrey_host}}:{{postgrey_port}}, {% endif %}
+	reject_unlisted_recipient
+	{% if postfix_filter_multi_enable %}, check_recipient_access hash:/etc/postfix/local/filters{% endif %}
+
+append_at_myorigin = no
+
+append_dot_mydomain = no
+
+#address_verify_map = btree:/addons/postfix/var/data/local/verify
+
+unverified_recipient_reject_code = 450
+
+disable_vrfy_command=yes
+
+#delay_warning_time = 4h
+
+readme_directory = no
+
+#smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+#smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+#smtpd_use_tls=yes
+#smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+#smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+#smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+#myhostname = radicalspam.localhost.net
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mailbox_size_limit = 0
+recipient_delimiter = +
+
+{% if postfix_filter_enable %}
+{% if postfix_filter_before_queue %}
+smtpd_proxy_filter = {{postfix_filter_host}}:{{postfix_filter_port}}
+{% else %}
+content_filter = smtp-filter:[{{postfix_filter_host}}]:{{postfix_filter_port}}
+{% endif %}
+{% endif %}

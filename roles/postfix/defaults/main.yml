@@ -1,0 +1,30 @@
+
+# limit message size in bytes (ex : 12582912 = 12Mo)
+message_size_limit: 12582912
+
+postfix_filter_multi_enable: false
+#postfix_filters:
+#  - [example.net, [127.0.0.1]:10039]
+
+postfix_filter_enable: true
+
+#proxy mode (smtpd_proxy_filter)
+postfix_filter_before_queue: false
+
+#default (content_filter ou smtpd_proxy_filter)
+postfix_filter_host: 127.0.0.1
+postfix_filter_port: 10024
+
+postfix_max_servers: 2
+
+postfix_rbls_client:
+  - zen.spamhaus.org
+  
+postfix_spoofing_enable: true
+
+# smtp verify - not enable if exchange
+postfix_verify_enable: false
+
+postfix_transport_target: "[192.168.1.1]:25"
+
+postfix_transport_bind: 

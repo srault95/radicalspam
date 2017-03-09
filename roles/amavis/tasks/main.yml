@@ -1,0 +1,102 @@
+- name: Requires by Amavis
+  apt: name={{ item }} state=present install_recommends=no
+  with_items:
+    - arj
+    - cabextract
+    - lzop
+    - nomarch
+    - p7zip-full
+    - ripole
+    - rpm2cpio
+    - tnef
+    - unzip
+    - unrar-free
+    - zip
+    - zoo
+    - p0f
+    #- xz-utils
+    #- pax
+    #- bzip2
+    #- cpio
+    #- lhasa
+    #- libnet-patricia-perl
+  tags: install
+
+- name: Install Amavis
+  apt: name={{ item }} state=present install_recommends=no
+  with_items:
+    - amavisd-new
+    - amavisd-new-postfix
+  tags: install
+
+- name: Start amavis service
+  service: name=amavis state=stopped enabled=true
+  tags: service
+
+- name: add clamav in amavis group
+  user: name=clamav state=present groups=amavis
+
+- name: add amavis in clamav group
+  user: name=amavis state=present groups=clamav
+
+- name: add debian-spamd in amavis group
+  user: name=debian-spamd state=present groups=amavis
+  
+- name: add amavis in debian-spamd group
+  user: name=amavis state=present groups=debian-spamd
+
+- name: amavis create directories
+  file: path=/var/lib/amavis/{{item}} state=directory force=yes mode=0770 group=amavis owner=amavis
+  with_items:
+    - tmp
+    - db
+    - var
+    - config/policies
+    - virusmails/virus
+    - virusmails/banned
+    - virusmails/spam
+    - virusmails/archives
+    - virusmails/clean
+  tags: install
+
+- name: amavis config local_domains
+  template: src=templates/local_domains.j2 dest=/var/lib/amavis/config/local_domains backup=yes
+  tags: config
+
+- name: amavis config 98-radicalspam
+  template: src=templates/98-radicalspam.j2 dest=/etc/amavis/conf.d/98-radicalspam backup=yes
+  tags: config
+
+- name: amavis config 99-radicalspam-output (optional)
+  template: src=templates/99-radicalspam-output.j2 dest=/etc/amavis/conf.d/99-radicalspam-output backup=yes
+  tags: config
+
+- name: amavis config mynetworks
+  template: src=templates/mynetworks.j2 dest=/var/lib/amavis/config/mynetworks backup=yes
+  tags: config
+
+- name: Create Amavis output policies
+  file: path=/var/lib/amavis/config/policies/output state=directory force=yes mode=0770 group=amavis owner=amavis
+  when: amavis_output_enable
+  tags: install
+
+- name: amavis create empty files and razor register
+  shell: |
+    touch /var/lib/amavis/config/whitelist_sender
+    touch /var/lib/amavis/config/blacklist_sender
+    touch /var/lib/amavis/config/virus_lovers
+    touch /var/lib/amavis/config/spam_lovers
+    touch /var/lib/amavis/config/banned_lovers
+    touch /var/lib/amavis/config/debug_senders
+    
+    if [ ! -e /var/lib/amavis/.razor/identity ]; then
+      su - amavis -c "razor-admin -create"
+      su - amavis -c "razor-admin -register"
+    fi  
+    
+    chown -R amavis:amavis /var/lib/amavis
+    
+  notify: restart amavis
+  tags: config
+
+      

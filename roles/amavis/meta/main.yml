@@ -1,0 +1,4 @@
+dependencies:
+   - { role: spamassassin }
+   - { role: clamav }
+   - { role: postfix }   

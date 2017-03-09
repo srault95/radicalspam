@@ -1,0 +1,5 @@
+{% if postfix_verify_enable %}
+{% for domain in domains %}
+{{domain}}	reject_unverified_recipient
+{% endfor %}
+{% endif %}

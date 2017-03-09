@@ -1,0 +1,44 @@
+- name: Install Clamav
+  apt: name={{ item }} state=present install_recommends=no
+  with_items:
+    - clamav
+    - clamav-daemon
+    - clamav-freshclam
+  tags: install
+
+- name: Install unofficial-sigs
+  apt: name=clamav-unofficial-sigs state=present install_recommends=no
+  when: clamav_unofficial_sigs_enable
+  tags: install
+      
+- name: Start clamav service
+  service: name=clamav-daemon state=started enabled=true
+  tags: service
+
+- name: Start freshclam service
+  service: name=clamav-freshclam state=started enabled=true
+  tags: service
+
+- name: clamav clamd config
+  template: src=templates/clamd.conf.j2 dest=/etc/clamav/clamd.conf backup=yes
+  tags: config
+      
+- name: clamav freshclam config
+  template: src=templates/freshclam.conf.j2 dest=/etc/clamav/freshclam.conf backup=yes
+  tags: config
+
+- name: clamav load sigs
+  shell: |
+    echo "Update clamav sigs"
+    freshclam -c 1
+    
+    echo "Update clamav unofficial-sigs"
+    if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
+      /usr/sbin/clamav-unofficial-sigs
+    fi
+    
+    chown clamav.clamav -R /var/lib/clamav
+    
+  notify: restart clamav
+  tags: config
+        

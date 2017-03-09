@@ -1,0 +1,19 @@
+
+sa_redis_enable: false
+sa_redis_server: 127.0.0.1:6379
+sa_redis_db: 1
+
+sa_ok_languages:
+  - fr
+  - en
+  - de
+  - ar
+  - es
+  - pl
+  - it
+  
+sa_required_score: 8.0  
+
+sa_channels:
+  - updates.spamassassin.org
+  - sa-update.radicalspam.org

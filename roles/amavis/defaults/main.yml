@@ -1,0 +1,9 @@
+---
+
+amavis_enable: true
+
+amavis_redis_enable: false
+amavis_redis_server: 
+
+amavis_output_enable: false
+amavis_output_forward_method: smtp:[127.0.0.1]:10026

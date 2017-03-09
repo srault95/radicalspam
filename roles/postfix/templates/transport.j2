@@ -1,0 +1,9 @@
+{% if postfix_transport_bind %}
+	{% set transport = 'smtp-customers' %}
+{% else %}
+	{% set transport = 'relay' %}
+{% endif %}
+
+{% for domain in domains %}
+{{domain}}	{{transport}}:{{postfix_transport_target}}
+{% endfor %}

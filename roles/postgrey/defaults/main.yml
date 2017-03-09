@@ -1,0 +1,25 @@
+postgrey_enable: true
+
+postgrey_verbose: true
+
+postgrey_host: 127.0.0.1
+postgrey_port: 10023
+
+# greylisted for N seconds (default: 300)
+postgrey_delay: 15
+
+# days before remove entry in database (default 35)
+postgrey_max_age: 35
+
+# sended if reject
+postgrey_message: Greylisted for %s seconds
+
+# if enable, remove last 8 bits from ip address
+# if disable, use all ip address
+postgrey_bysubnet_enable: true
+
+# auto add whitelist if 2 corrects mails (default 5)
+postgrey_auto_wl: 2
+
+# max days for retry
+postgrey_retry: 5

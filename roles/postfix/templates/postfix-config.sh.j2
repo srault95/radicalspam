@@ -1,0 +1,36 @@
+#!/bin/bash
+
+cd /etc/postfix/local
+
+postmap directory
+
+{% if postfix_filter_multi_enable %}
+postmap filters
+{% endif %}
+
+postmap relays
+
+{% if postfix_spoofing_enable %}
+postmap spoofing
+{% endif %}
+
+postmap transport
+
+{% if postfix_verify_enable %}
+postmap verify-recipients
+{% endif %}
+
+postmap blacklist-clients
+postmap blacklist-helo
+postmap blacklist-recipients
+postmap blacklist-senders
+postmap canonical-recipient
+postmap canonical-sender
+postmap exceptions-helo
+postmap exceptions-senders
+postmap whitelist-clients
+
+#postmap mynetworks-lan
+#postmap mynetworks-wan
+
+newaliases

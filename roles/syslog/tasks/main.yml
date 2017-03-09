@@ -1,0 +1,16 @@
+---
+
+- name: Installs syslog-ng
+  apt: name=syslog-ng-core state=latest install_recommends=no
+  tags: install
+
+- name: Installs syslog-ng with mongodb
+  apt: name=syslog-ng-mod-mongodb state=latest install_recommends=no
+  when: syslog_mongodb_enable
+  tags: install
+
+- name: syslog-ng config
+  template: src=templates/syslog-ng.conf.j2 dest=/etc/syslog-ng/syslog-ng.conf backup=yes
+  notify: restart syslog-ng
+  tags: config
+  

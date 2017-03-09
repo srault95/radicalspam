@@ -1,0 +1,26 @@
+DatabaseOwner clamav
+#UpdateLogFile /var/log/clamav/freshclam.log
+LogVerbose false
+LogSyslog {{clamav_syslog_enable|default('true')}}
+LogFacility LOG_MAIL
+#LogFileMaxSize 0
+LogRotate false
+LogTime true
+Foreground false
+Debug false
+MaxAttempts 5
+DatabaseDirectory /var/lib/clamav
+AllowSupplementaryGroups true
+ConnectTimeout 30
+ReceiveTimeout 30
+TestDatabases yes
+ScriptedUpdates yes
+CompressLocalDatabase no
+SafeBrowsing false
+Bytecode true
+NotifyClamd /etc/clamav/clamd.conf
+Checks {{clamav_check|default(12)}}
+DNSDatabaseInfo current.cvd.clamav.net
+{% for mirror in clamav_mirrors %}
+DatabaseMirror {{mirror}}
+{% endfor %}

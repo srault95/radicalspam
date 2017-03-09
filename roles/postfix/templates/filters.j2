@@ -1,0 +1,6 @@
+{% if postfix_filter_multi_enable %}
+{% for domain, ft in postfix_filters %}
+{{domain}}		FILTER smtp-filter:{{ft}}
+{% endfor %}
+{% endif %}
+

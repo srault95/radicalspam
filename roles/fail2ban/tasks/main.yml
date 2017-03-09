@@ -1,0 +1,2 @@
+- name: Installs fail2ban
+  apt: name=fail2ban state=latest install_recommends=no
