@@ -2,7 +2,7 @@ FROM williamyeh/ansible:ubuntu16.04-onbuild
 
 ENV PLAYBOOK ${PLAYBOOK:-radicalspam.yml}
 
-RUN ansible-playbook-wrapper --extra-vars "remote_user=root"
+RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=all"
 
 EXPOSE 25/tcp 465/tcp
 

@@ -25,8 +25,7 @@
 
 - name: configure ovh failover interface
   template: src=templates/ovh-failover-interface.j2 dest=/etc/network/interfaces.d/ens3:0.cfg force=yes backup=yes
-  when: failover_address is defined
-  when: ansible_virtualization_type != "docker"
+  when: failover_address is defined and ansible_virtualization_type != "docker"
   notify:
      - restart network
      - up failover interface  
