@@ -1,4 +1,0 @@
-recursive-include rs_agent *
-include Dockerfile
-include README.rst
-global-exclude *.pyc

@@ -1,7 +1,0 @@
-[template]
-src = "z_01_my_config.cf.tmpl"
-dest = "/etc/spamassassin/z_01_my_config.cf"
-keys = [
-    "/rs/sa/config",
-]
-reload_cmd = "supervisorctl restart spamd"

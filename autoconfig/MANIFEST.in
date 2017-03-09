@@ -1,4 +1,0 @@
-include README.rst
-include setup.cfg
-recursive-include rs_autoconfig *
-global-exclude *.pyc
