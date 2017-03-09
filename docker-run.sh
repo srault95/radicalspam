@@ -47,15 +47,16 @@ check_port "8080"
 #docker rmi -f ${DOCKER_IMAGE}
 #docker rm -v ${CT_NAME}
 
-docker build -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
+docker build --pull --force-rm --no-cache -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
 
 docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
 
-#TODO: --privileged ?
 docker run -d \
    --name ${CT_NAME} \
+   --privileged \
    --net host --pid=host \
    -v /etc/localtime:/etc/localtime \
+   -v $PWD/store/log:/var/log \
    -v $PWD/store/amavis/config:/var/lib/amavis/config \
    -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
    -v $PWD/store/postfix/local:/etc/postfix/local \
