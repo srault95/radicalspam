@@ -2,15 +2,65 @@
 
 ## Configuration
 
-- La configuration pour tous les serveurs se trouve dans `group_vars/all.yml`
+RadicalSpam est pré-configuré pour la plupart des cas d'utilisation.
 
-- Pour chaque serveur, vous devez créer un fichier dans `host_vars/MON_SERVER.yml`
+Les seuls éléments importants à personnaliser sont:
 
-- Le fichier /etc/ansible/hosts doit contenir la liste des serveurs à déployer
+- Les noms de domaines
+- L'adresse email du compte root 
+
+### group_vars/all.yml
+
+- Configurez dans ce fichier, ce qui est global à tous les serveurs déployés
+
+### host_vars/localhost.yml
+
+- Modifiez ou copiez ce fichier pour définir les variables spécifiques à vos serveurs.
+
+### inventory.ini
+
+- Placez vos groupes et serveurs de ce fichier (le même format que /etc/ansible/hosts)
+
+### requirements.yml (optionnel)
+
+- A utiliser si vous souhaitez charger des rôles Ansible (galaxy) supplémentaires 
+
+### Variables d'environnement d'Ansible
+
+- ANSIBLE_DEBUG=false
+- ANSIBLE_VERBOSITY=0
+- ANSIBLE_TIMEOUT=10
+- ANSIBLE_REMOTE_USER=none
 
 ## Installation
 
+### Ansible intégré dans une image Docker
+
+A utiliser si vous souhaitez déployer RadicalSpam sur un ou plusieurs serveurs dédiés
+
+	docker pull williamyeh/ansible:alpine3
+	git clone https://github.com/srault95/radicalspam
+	cd radicalspam
+	docker run -it --rm -w /tmp \
+		-v /etc/ansible:/etc/ansible -v $PWD:/tmp -v /root:/root \
+		williamyeh/ansible:alpine3 \
+		ansible-playbook /tmp/radicalspam.yml -vv
+
+### Tout dans un container Docker
+
+Cette version rassemble tous les éléments de RadicalSpam dans un seul container Docker.
+
+> Tests réalisés avec Docker 1.12.5 sur Ubuntu 16.04 64bits
+
+	git clone https://github.com/srault95/radicalspam
+	cd radicalspam
+	bash ./docker-run.sh
+
 ### Directement par Ansible
+
+> A utiliser par un expert ansible car la machine en cours sera entièrement reconfiguré.
+
+> Attention à bien prendre Ansible en version 2.2 minimum
 
 	apt-get install ansible
 	OU
@@ -19,42 +69,8 @@
 	git clone https://github.com/srault95/radicalspam
 	cd radicalspam
 	ansible-playbook radicalspam.yml
-
-### Ansible intégré dans une image Docker
-
-	docker pull williamyeh/ansible:alpine3
-	git clone https://github.com/srault95/radicalspam
-	cd radicalspam
-	docker run -it --rm -w /tmp \
-		-v /etc/ansible:/etc/ansible -v $PWD:/tmp -v /root:/root \
-		williamyeh/ansible:alpine3 \
-		ansible-playbook /tmp/radicalspam.yml -l 'rs1' -vv
-
-### Tout dans un container Docker
-
-
-	chmod +x docker-run.sh
-	./docker-run.sh
-	
-	# OU
-
-	docker build -t radicalspam .
-	docker run -d \
-	   --name rs4 \
-	   --net host --pid=host \
-	   -v /etc/localtime:/etc/localtime \
-	   -v $PWD/store/amavis/config:/var/lib/amavis/config \
-	   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
-	   -v $PWD/store/postfix/local:/etc/postfix/local \
-	   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
-	   -v $PWD/store/postfix/spool:/var/spool/postfix \
-	   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
-	   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
-	   -v $PWD/store/clamav:/var/lib/clamav \
-	   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
-	   radicalspam
 		
-### Par Vagrant
+### Par Vagrant (non testé)
 
 	git clone https://github.com/srault95/radicalspam
 	cd radicalspam

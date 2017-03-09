@@ -30,13 +30,14 @@
 - name: enable spamassassin CRON
   lineinfile: dest=/etc/default/spamassassin regexp=^CRON= line=CRON=1
   tags: install
-  
-- name: Amavis directories
-  shell: |
-    COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
-    if [ $COUNT -lt 1 ]; then
-      su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
-    fi
-  tags: config
   notify: restart spamassassin
+  
+#- name: SA update
+#  shell: |
+#    COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
+#    if [ $COUNT -lt 1 ]; then
+#      su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
+#    fi
+#  tags: config
+#  notify: restart spamassassin
   

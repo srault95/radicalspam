@@ -1,8 +1,16 @@
 FROM williamyeh/ansible:ubuntu16.04-onbuild
 
-ENV PLAYBOOK ${PLAYBOOK:-radicalspam.yml}
+# https://github.com/ansible/ansible/blob/devel/lib/ansible/constants.py
+ENV ANSIBLE_GATHERING smart
+ENV ANSIBLE_RETRY_FILES_ENABLED false
+ENV ANSIBLE_BECOME false
 
-RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=all"
+ENV REQUIREMENTS	requirements.yml
+ENV PLAYBOOK		${PLAYBOOK:-radicalspam.yml}
+ENV INVENTORY		inventory.ini
+ENV VERBOSE 		${VERBOSE:-}
+
+RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost" ${VERBOSE}
 
 EXPOSE 25/tcp 465/tcp
 
