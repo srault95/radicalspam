@@ -74,29 +74,10 @@
 - name: amavis config mynetworks
   template: src=templates/mynetworks.j2 dest=/var/lib/amavis/config/mynetworks backup=yes
   tags: config
+  notify: restart amavis
 
 - name: Create Amavis output policies
   file: path=/var/lib/amavis/config/policies/output state=directory force=yes mode=0770 group=amavis owner=amavis
   when: amavis_output_enable
   tags: install
 
-- name: amavis create empty files and razor register
-  shell: |
-    touch /var/lib/amavis/config/whitelist_sender
-    touch /var/lib/amavis/config/blacklist_sender
-    touch /var/lib/amavis/config/virus_lovers
-    touch /var/lib/amavis/config/spam_lovers
-    touch /var/lib/amavis/config/banned_lovers
-    touch /var/lib/amavis/config/debug_senders
-    
-    if [ ! -e /var/lib/amavis/.razor/identity ]; then
-      su - amavis -c "razor-admin -create"
-      su - amavis -c "razor-admin -register"
-    fi  
-    
-    chown -R amavis:amavis /var/lib/amavis
-    
-  notify: restart amavis
-  tags: config
-
-      

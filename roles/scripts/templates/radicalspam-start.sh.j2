@@ -1,0 +1,62 @@
+#!/bin/bash
+
+clamav_update(){
+    echo "Update clamav..."
+    freshclam -c 1
+
+	{% if clamav_unofficial_sigs_enable %}    
+    echo "Update clamav unofficial-sigs"
+    if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
+      /usr/sbin/clamav-unofficial-sigs
+    fi
+    {% endif %}
+    
+    chown clamav.clamav -R /var/lib/clamav
+    
+    service clamav-daemon restart
+}
+
+sa_update() {
+    echo "Update spamassassin..."
+
+	COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
+	if [ $COUNT -lt 1 ]; then
+		su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
+	fi
+	
+    service clamav-daemon restart
+	
+}
+
+amavis_config() {
+    echo "Configure amavis..."
+    
+    touch /var/lib/amavis/config/whitelist_sender
+    touch /var/lib/amavis/config/blacklist_sender
+    touch /var/lib/amavis/config/virus_lovers
+    touch /var/lib/amavis/config/spam_lovers
+    touch /var/lib/amavis/config/banned_lovers
+    touch /var/lib/amavis/config/debug_senders
+    
+    if [ ! -e /var/lib/amavis/.razor/identity ]; then
+      su - amavis -c "razor-admin -create"
+      su - amavis -c "razor-admin -register"
+    fi  
+    
+    chown -R amavis:amavis /var/lib/amavis
+    
+	service amavis restart
+    
+}
+
+postfix_config() {
+	/etc/postfix/local/postfix-config.sh
+   service postfix restart
+}
+
+clamav_update
+sa_update
+amavis_config
+postfix_config
+
+tail -f /var/log/empty.log

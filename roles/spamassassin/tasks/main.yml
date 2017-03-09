@@ -32,12 +32,3 @@
   tags: install
   notify: restart spamassassin
   
-#- name: SA update
-#  shell: |
-#    COUNT=$(find /var/lib/spamassassin -type f -name "*.cf" | wc -l)
-#    if [ $COUNT -lt 1 ]; then
-#      su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
-#    fi
-#  tags: config
-#  notify: restart spamassassin
-  

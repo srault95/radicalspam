@@ -1,0 +1,3 @@
+- name: install radicalspam main script
+  template: src=templates/radicalspam-start.sh.j2 dest=/usr/bin/radicalspam-start mode=0750
+  tags: install

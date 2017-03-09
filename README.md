@@ -1,8 +1,16 @@
 # RadicalSpam 4
 
+RadicalSpam est une passerelle anti-spam et anti-virus pour les moyennes et grandes entreprises.
+
+Il doit être déclaré comme MX de vos domaines à protéger
+
+RadicalSpam se place en frontal d'internet, dans une DMZ et devient le passage obligatoire de tous les messages échangés entre l'entreprise et internet.
+
+Pour une protection efficace, vous devez définir au moins deux MX RadicalSpam mais si vous n'en déployez qu'un seul, ne définissez pas de MX secondaires non filtrés comme ceux fournis gratuitement par les fournisseurs d'accès internet.
+
 ## Configuration
 
-RadicalSpam est pré-configuré pour la plupart des cas d'utilisation.
+RadicalSpam est pré-configuré pour la plupart des cas d'utilisations.
 
 Les seuls éléments importants à personnaliser sont:
 

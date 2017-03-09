@@ -24,5 +24,5 @@
     - spamassassin
     - amavis
     - fail2ban
-    #- radicalspam
+    - scripts
   

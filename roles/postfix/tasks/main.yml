@@ -60,10 +60,5 @@
 
 - name: postfix config master
   template: src=templates/master.cf.j2 dest=/etc/postfix/master.cf backup=yes
-  tags: config
-      
-- name: postfix finished config
-  shell: /etc/postfix/local/postfix-config.sh
-  notify:
-    - restart postfix
+  notify: restart postfix
   tags: config
