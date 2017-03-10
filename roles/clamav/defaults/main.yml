@@ -1,7 +1,7 @@
 ---
 # defaults file for clamav-role
 
-clamav_foreground: {{supervisor_enable|default(False)}}
+clamav_foreground: "{{supervisor_enable|default(false)}}"
 
 clamav_tcp_enable: true
 clamav_tcp_host: 127.0.0.1

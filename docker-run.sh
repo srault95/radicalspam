@@ -44,15 +44,22 @@ check_disk
 check_port "25"
 check_port "465"
 
+echo "Stop previous container ${CT_NAME} if exist..."
 docker kill ${CT_NAME}
+
+echo "Remove previous container ${CT_NAME} if exist..."
 docker rm -v ${CT_NAME}
+
+echo "Remove radicalspam image if exist..."
 docker rmi -f ${DOCKER_IMAGE}:${RADICALSPAM_VERSION}
 docker rmi -f ${DOCKER_IMAGE}
 
+echo "Build radicalspam image..."
 docker build --pull --force-rm --no-cache -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
 
 docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
 
+echo "Run radicalspam container..."
 docker run -d \
    --name ${CT_NAME} \
    --privileged \

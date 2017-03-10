@@ -10,7 +10,7 @@ amavis_quarantine_method: smtp:[127.0.0.1]:10025
 #D_BOUNCE | D_PASS | D_DISCARD | D_REJECT ?
 amavis_destiny_unchecked: D_BOUNCE
 
-amavis_max_servers: {{postfix_filter_max_servers|default(2)}}
+amavis_max_servers: "{{postfix_filter_max_servers|default(2)}}"
 
 amavis_spam_subject_tag2_maps: "[*** ? SPAM ***] " 
 amavis_spam_subject_tag3_maps: "[*** SPAM ***] " 
