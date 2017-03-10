@@ -34,7 +34,7 @@ check_port() {
   local valid=$(netstat -tln | awk '{print $4}' | grep ":${1}\$")
   if [ -n "$valid" ]; then
     echo "ERROR: Port ${1} appears to already be in use."
-    exit 1
+    #exit 1
   fi
 }      
 
@@ -43,7 +43,6 @@ check_memory
 check_disk
 check_port "25"
 check_port "465"
-#check_port "8080"
 
 docker kill ${CT_NAME}
 docker rm -v ${CT_NAME}
