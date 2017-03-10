@@ -42,17 +42,18 @@
   user: name=amavis state=present groups=debian-spamd
 
 - name: amavis create directories
-  file: path=/var/lib/amavis/{{item}} state=directory force=yes mode=0770 group=amavis owner=amavis
+  file: path={{item}} state=directory force=yes mode=0770 group=amavis owner=amavis
   with_items:
-    - tmp
-    - db
-    - var
-    - config/policies
-    - virusmails/virus
-    - virusmails/banned
-    - virusmails/spam
-    - virusmails/archives
-    - virusmails/clean
+    - /var/lib/amavis/tmp
+    - /var/lib/amavis/db
+    - /var/lib/amavis/var
+    - /var/lib/amavis/config/policies
+    - /var/lib/amavis/virusmails/virus
+    - /var/lib/amavis/virusmails/banned
+    - /var/lib/amavis/virusmails/spam
+    - /var/lib/amavis/virusmails/archives
+    - /var/lib/amavis/virusmails/clean
+    - /var/run/amavis
   tags: install
 
 - name: amavis config local_domains

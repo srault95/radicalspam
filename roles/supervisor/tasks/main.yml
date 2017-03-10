@@ -23,7 +23,7 @@
   tags: config
   
 - name: supervisor is running and service enable
-  service: name=supervisor state=started enabled=no
+  service: name=supervisor state=started enabled=yes
   when: supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
 
@@ -38,14 +38,14 @@
   poll: 0
   ignore_errors: true
 
-- name: wait for server to come back
-  local_action: wait_for
-  args:
-    host: "{{ inventory_hostname }}"
-    port: 22
-    state: started
-    delay: 30
-    timeout: 300
+#- name: wait for server to come back
+#  local_action: wait_for
+#  args:
+#    host: "{{ inventory_hostname }}"
+#    port: 22
+#    state: started
+#    delay: 30
+#    timeout: 60
             
 #- name: restart server
 #  shell: /sbin/shutdown -r now
