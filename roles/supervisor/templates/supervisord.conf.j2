@@ -100,3 +100,14 @@ autorestart=false
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
+[program:cron]
+priority=10
+command = cron -f -L 2
+stopwaitsecs = 3600
+stopasgroup = false
+killasgroup = true
+autostart=false
+autorestart=true
+stopsignal=QUIT
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log

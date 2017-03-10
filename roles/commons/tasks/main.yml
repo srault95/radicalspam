@@ -31,8 +31,8 @@
     - git
   tags: install
 
-- name: cron is running and service enabled
-  service: name=cron state=started enabled=yes
+- name: cron is not running and service disabled
+  service: name=cron state=stopped enabled=no
 
 - name: configure ovh failover interface
   template: src=templates/ovh-failover-interface.j2 dest=/etc/network/interfaces.d/ens3:0.cfg force=yes backup=yes
