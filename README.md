@@ -62,7 +62,10 @@ Cette version rassemble tous les éléments de RadicalSpam dans un seul containe
 
 	git clone https://github.com/srault95/radicalspam
 	cd radicalspam
-	bash ./docker-run.sh
+	bash ./docker-run.sh full
+	# OR
+	chmod +x ./docker-run.sh
+	./docker-run.sh full
 
 ### Directement par Ansible
 

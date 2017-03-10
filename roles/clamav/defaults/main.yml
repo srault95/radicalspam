@@ -15,4 +15,4 @@ clamav_mirrors:
   - db.fr.clamav.net
   - database.clamav.net
 
-clamav_unofficial_sigs_enable: true
+clamav_unofficial_sigs_enable: false
