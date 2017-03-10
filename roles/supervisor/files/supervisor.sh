@@ -2,6 +2,8 @@
 
 set -e
 
-/usr/bin/radicalspam-start
+/usr/local/bin/radicalspam-start
+
+[-e /var/log/supervisor ] || mkdir -vp /var/log/supervisor
 
 exec supervisord --nodaemon -c /etc/supervisor/supervisord.conf

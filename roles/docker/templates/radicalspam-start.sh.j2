@@ -2,7 +2,10 @@
 
 clamav_update(){
     echo "Update clamav..."
-    freshclam -c 1
+    
+    chown clamav.clamav -R /var/lib/clamav
+    
+    freshclam -c 1 --user clamav
 
 	{% if clamav_unofficial_sigs_enable %}    
     echo "Update clamav unofficial-sigs"
@@ -13,7 +16,7 @@ clamav_update(){
     
     chown clamav.clamav -R /var/lib/clamav
     
-    service clamav-daemon restart
+    #service clamav-daemon restart
 }
 
 sa_update() {
@@ -24,7 +27,7 @@ sa_update() {
 		su - debian-spamd -c "sa-update --channelfile /etc/spamassassin/channels.txt --nogpg --allowplugins"
 	fi
 	
-    service spamassassin restart
+    #service spamassassin restart
 	
 }
 
@@ -45,22 +48,32 @@ amavis_config() {
     
     chown -R amavis:amavis /var/lib/amavis
     
-	service amavis restart
+	#service amavis restart
     
 }
 
 postfix_config() {
 	/etc/postfix/local/postfix-config.sh
-   service postfix restart
+   #service postfix restart
 }
 
-service syslog-ng restart
+postgrey_config(){
+	touch /etc/postgrey/whitelist_clients
+	touch /etc/postgrey/whitelist_recipients
+}
+
+fail2ban_config() {
+	mkdir -vp /var/run/fail2ban
+}
+
+#service syslog-ng restart
 clamav_update
 sa_update
 amavis_config
-service postgrey start
+#service postgrey start
+postgrey_config()
 postfix_config
-service fail2ban restart
+#service fail2ban restart
 
 sleep 2
 

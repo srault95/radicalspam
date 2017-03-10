@@ -6,6 +6,7 @@ syslog_user  =  /var/log/syslog
 syslog_ftp = /var/log/syslog
 syslog_daemon =  /var/log/syslog
 syslog_local0 =  /var/log/syslog
+sshd_log = %(syslog_authpriv)s
 
 ignoreip = {{fail2ban_ignoreip|join(' ')}}
 

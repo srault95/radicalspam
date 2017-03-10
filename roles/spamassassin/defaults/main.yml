@@ -16,4 +16,4 @@ sa_required_score: 8.0
 
 sa_channels:
   - updates.spamassassin.org
-  - sa-update.radicalspam.org
+  #- sa-update.radicalspam.org

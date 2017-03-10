@@ -44,48 +44,83 @@ check_disk
 check_port "25"
 check_port "465"
 
-echo "Stop previous container ${CT_NAME} if exist..."
-docker kill ${CT_NAME}
+docker_clean() {
+	echo "Stop previous container ${CT_NAME} if exist..."
+	docker kill ${CT_NAME}
+	
+	echo "Remove previous container ${CT_NAME} if exist..."
+	docker rm -v ${CT_NAME}
+	
+	echo "Remove radicalspam image if exist..."
+	docker rmi -f ${DOCKER_IMAGE}:${RADICALSPAM_VERSION}
+	docker rmi -f ${DOCKER_IMAGE}
+}
 
-echo "Remove previous container ${CT_NAME} if exist..."
-docker rm -v ${CT_NAME}
+usage() {
+   echo "Usage: $0 <action>"
+   echo ""
+   echo "  clean                   Clean old image and container"
+   echo "  build                   Build image"
+   echo "  run                     Run container"
+   echo ""
+   echo "  full                    Clean, Build and Run"
+   echo ""
+   echo "  help                    Display this help"
+}
 
-echo "Remove radicalspam image if exist..."
-docker rmi -f ${DOCKER_IMAGE}:${RADICALSPAM_VERSION}
-docker rmi -f ${DOCKER_IMAGE}
+docker_build() {
+	echo "Build radicalspam image..."
+	docker build --pull --force-rm --no-cache -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
+	docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
+}
 
-echo "Build radicalspam image..."
-docker build --pull --force-rm --no-cache -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
+docker_run() {
+	echo "Run radicalspam container..."
+	docker run -d \
+	   --name ${CT_NAME} \
+	   --privileged \
+	   --net host --pid=host \
+	   -v /etc/localtime:/etc/localtime \
+	   ${DOCKER_IMAGE}
+	
+	#docker run -d \
+	#   --name ${CT_NAME} \
+	#   --privileged \
+	#   --net host --pid=host \
+	#   -v /etc/localtime:/etc/localtime \
+	#   -v $PWD/store/log:/var/log \
+	#   -v $PWD/store/amavis/config:/var/lib/amavis/config \
+	#   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
+	#   -v $PWD/store/postfix/local:/etc/postfix/local \
+	#   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
+	#   -v $PWD/store/postfix/spool:/var/spool/postfix \
+	#   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
+	#   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
+	#   -v $PWD/store/clamav:/var/lib/clamav \
+	#   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
+	#   ${DOCKER_IMAGE}
+}
 
-docker tag ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} ${DOCKER_IMAGE}:latest || exit 1
-
-echo "Run radicalspam container..."
-docker run -d \
-   --name ${CT_NAME} \
-   --privileged \
-   --net host --pid=host \
-   -v /etc/localtime:/etc/localtime \
-   ${DOCKER_IMAGE}
-
-#docker run -d \
-#   --name ${CT_NAME} \
-#   --privileged \
-#   --net host --pid=host \
-#   -v /etc/localtime:/etc/localtime \
-#   -v $PWD/store/log:/var/log \
-#   -v $PWD/store/amavis/config:/var/lib/amavis/config \
-#   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
-#   -v $PWD/store/postfix/local:/etc/postfix/local \
-#   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
-#   -v $PWD/store/postfix/spool:/var/spool/postfix \
-#   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
-#   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
-#   -v $PWD/store/clamav:/var/lib/clamav \
-#   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
-#   ${DOCKER_IMAGE}
+case "$1" in
+  build)
+  	docker_build
+	;;
+  clean)
+  	docker_clean
+  	;;
+  run)
+  	docker_run
+  	;;
+  full)
+  	docker_clean
+  	docker_build
+  	docker_run
+  	;;
+  *)
+	usage
+    exit 1
+esac
 
 RET=$?   
-
-docker ps
 
 exit $RET

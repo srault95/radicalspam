@@ -20,7 +20,7 @@ amavis_spam_subject_tag3_maps: "[*** SPAM ***] "
  
 
 #Spam?
-amavis_sa_tag2_level_deflt: 8.0
+amavis_sa_tag2_level_deflt: "{{sa_required_score|default(8.0)}}"
 #Spam confirmed:
 amavis_sa_tag3_level_deflt: 10.0
 

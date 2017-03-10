@@ -2,18 +2,6 @@
 
 set -e
 
-{% if mongodb_enable|default(False) %}
-echo "Start mongodb..."
-supervisorctl start mongodb
-sleep 2
-{% endif %}
-
-{% if redis_enable|default(False) %}
-echo "Start redis..."
-supervisorctl start redis
-sleep 1
-{% endif %}
-
 echo "Start freshclam..."
 supervisorctl start freshclam
 
@@ -33,7 +21,12 @@ supervisorctl start postgrey
 sleep 1
 {% endif %}
 
+echo "Start fail2ban..."
+supervisorctl start fail2ban
+sleep 1
+
 echo "Start postfix..."
 supervisorctl start postfix
 sleep 2
+
 
