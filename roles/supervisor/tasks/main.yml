@@ -16,13 +16,13 @@
   template: src=templates/start-services.sh.j2 dest=/usr/local/bin/start-services backup=yes mode=0755
   tags: config
   
+- name: supervisor is running and service enable
+  service: name=supervisor state=started enabled=no
+  when: supervisor_enable and ansible_virtualization_type != "docker"
+  tags: service
+
 - name: supervisor is not running and service disabled
   service: name=supervisor state=stopped enabled=no
   when: not supervisor_enable
-  tags: service
-    
-- name: supervisor is running and service enable
-  service: name=supervisor state=stopped enabled=no
-  when: supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
     
