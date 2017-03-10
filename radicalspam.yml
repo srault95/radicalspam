@@ -1,6 +1,13 @@
 ---
 
 - hosts: all
+  gather_facts: false
+  remote_user: '{{ remote_user|default("ubuntu") }}'
+  become: yes
+  pre_tasks:
+    - raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+
+- hosts: all
   gather_facts: yes
   #remote_user: ubuntu
   #--extra-vars "remote_user=root"
@@ -8,8 +15,6 @@
   become: yes
   roles:
     - commons
-  pre_tasks:
-    - raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
 
 - hosts: '{{ hosts|default("radicalspam") }}'
   gather_facts: no
