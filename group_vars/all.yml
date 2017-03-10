@@ -1,3 +1,5 @@
+supervisor_enable: true
+
 timezone: Europe/Paris
 
 domains: 

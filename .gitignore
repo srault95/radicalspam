@@ -10,7 +10,7 @@ doc/_build
 dist
 build
 archives/
-site.retry
+*.retry
 TODO*
 fabfile.*
 old*
