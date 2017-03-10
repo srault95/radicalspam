@@ -26,3 +26,7 @@
   when: not supervisor_enable
   tags: service
     
+- name: restart server
+  command: /sbin/shutdown -r now
+  when: ansible_virtualization_type != "docker"
+  tags: command
