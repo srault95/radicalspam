@@ -4,16 +4,22 @@
 
 - name: supervisor config
   template: src=templates/supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf backup=yes
+  when: supervisor_enable
   tags: config
 
 - name: copy postfix script
   copy: src=postfix.sh dest=/usr/local/bin/postfix-start mode=0755
+  when: supervisor_enable
+  tags: config
 
 - name: copy supervisor script
   copy: src=supervisor.sh dest=/usr/local/bin/supervisor-start mode=0755
+  when: supervisor_enable
+  tags: config
   
 - name: supervisor start services script
   template: src=templates/start-services.sh.j2 dest=/usr/local/bin/start-services backup=yes mode=0755
+  when: supervisor_enable
   tags: config
   
 - name: supervisor is running and service enable

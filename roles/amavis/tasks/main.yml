@@ -102,7 +102,7 @@
     
 - name: docker amavis is not running and service disabled
   service: name=amavis state=stopped enabled=no
-  when: ansible_virtualization_type == "docker"
+  when: supervisor_enable or ansible_virtualization_type == "docker"
   tags: service
 
       
