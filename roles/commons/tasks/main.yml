@@ -28,6 +28,7 @@
     - curl
     - ufw
     - python3-pip
+    - git
   tags: install
 
 - name: cron is running and service enabled

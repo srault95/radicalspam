@@ -11,16 +11,16 @@ ENV REQUIREMENTS	requirements.yml
 ENV PLAYBOOK		radicalspam.yml
 ENV INVENTORY		inventory.ini
 
-VOLUME /var/log \
- /var/lib/amavis/config \
- /var/lib/amavis/virusmails \
- /etc/postfix/local \
- /etc/postfix/ssl \
- /var/spool/postfix \
- /etc/postgrey \
- /var/lib/postgrey \
- /var/lib/clamav \
- /var/lib/users/spamassassin
+#VOLUME /var/log \
+# /var/lib/amavis/config \
+# /var/lib/amavis/virusmails \
+# /etc/postfix/local \
+# /etc/postfix/ssl \
+# /var/spool/postfix \
+# /etc/postgrey \
+# /var/lib/postgrey \
+# /var/lib/clamav \
+# /var/lib/users/spamassassin
 
 RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
 

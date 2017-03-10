@@ -56,7 +56,7 @@
   tags: install
 
 - name: amavis config local_domains
-  template: src=templates/local_domains.j2 dest=/var/lib/amavis/config/local_domains backup=yes
+  template: src=templates/local_domains.j2 dest=/var/lib/amavis/config/local_domains backup=yes force=yes
   tags: config
 
 - name: amavis config 98-radicalspam

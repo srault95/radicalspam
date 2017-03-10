@@ -59,7 +59,7 @@ stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
 {% if postgrey_enable|default(False) %}
 [program:postgrey]
-command=/usr/sbin/postgrey -v
+command=/usr/sbin/postgrey -v --inet={{postgrey_host}}:{{postgrey_port}}
 priority=5
 autostart=false
 autorestart=true
