@@ -27,6 +27,13 @@
   tags: service
     
 - name: restart server
-  command: /sbin/shutdown -r now
+  shell: /sbin/shutdown -r now
   when: ansible_virtualization_type != "docker"
+  async: 0
+  poll: 0
   tags: command
+
+- name: waiting for server to come back
+  local_action: wait_for host={{ ansible_ssh_host }} state=started
+
+  
