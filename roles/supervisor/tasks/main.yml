@@ -26,14 +26,29 @@
   when: not supervisor_enable
   tags: service
     
-- name: restart server
-  shell: /sbin/shutdown -r now
-  when: ansible_virtualization_type != "docker"
-  async: 0
+- name: reboot nodes
+  shell: sleep 2 && shutdown -r now "Ansible reboot"
+  async: 1
   poll: 0
-  tags: command
+  ignore_errors: true
 
-- name: waiting for server to come back
-  local_action: wait_for host={{ ansible_ssh_host }} state=started
+- name: wait for server to come back
+  local_action: wait_for
+  args:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: started
+    delay: 30
+    timeout: 300
+            
+#- name: restart server
+#  shell: /sbin/shutdown -r now
+#  when: ansible_virtualization_type != "docker"
+#  async: 0
+#  poll: 0
+#  tags: command
+
+#- name: waiting for server to come back
+#  local_action: wait_for host={{ ansible_ssh_host }} state=started
 
   
