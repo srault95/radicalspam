@@ -23,6 +23,14 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisorctl]
 serverurl=unix:///var/run/supervisor.sock
 
+[program:syslog]
+command=/usr/sbin/syslog-ng --foreground
+priority=999
+autostart=false
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
+
 [program:freshclam]
 command=/usr/bin/freshclam --quiet -c 2 --enable-stats
 priority=2
@@ -85,7 +93,7 @@ stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
 [program:start]
 command=/usr/local/bin/start-services
-priority=999
+priority=998
 startretries=1
 autostart=true
 autorestart=false

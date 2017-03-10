@@ -2,11 +2,15 @@
 
 set -e
 
-echo "Start freshclam..."
-supervisorctl start freshclam
+echo "Start syslog..."
+supervisorctl start syslog
 
 echo "Start clamd..."
 supervisorctl start clamd
+sleep 2
+
+echo "Start freshclam..."
+supervisorctl start freshclam
 sleep 2
 
 {% if amavis_enable|default(False) %}
