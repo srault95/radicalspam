@@ -31,9 +31,6 @@
     - git
   tags: install
 
-- name: cron is not running and service disabled
-  service: name=cron state=stopped enabled=no
-
 - name: configure ovh failover interface
   template: src=templates/ovh-failover-interface.j2 dest=/etc/network/interfaces.d/ens3:0.cfg force=yes backup=yes
   when: failover_address is defined and ansible_virtualization_type != "docker"
@@ -42,4 +39,14 @@
      - up failover interface
   tags: config
 
+- name: cron is not running and service disabled
+  service: name=cron state=stopped enabled=no
+  when: ansible_virtualization_type == "docker"
+  tags: service
+  
+- name: cron is running and service enabled
+  service: name=cron state=started enabled=yes
+  when: ansible_virtualization_type != "docker"
+  tags: service
+    
   
