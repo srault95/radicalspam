@@ -15,8 +15,11 @@
 
 - name: syslog-ng is running and service enabled
   service: name=syslog-ng state=restarted enabled=yes
-  when: ansible_virtualization_type != "docker"
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
+  tags: service
     
 - name: docker syslog-ng is not running and service disabled
   service: name=syslog-ng state=stopped enabled=no
   when: ansible_virtualization_type == "docker"
+  tags: service
+  

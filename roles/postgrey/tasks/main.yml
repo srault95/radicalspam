@@ -10,7 +10,7 @@
 
 - name: postgrey is running and service enabled
   service: name=postgrey state=restarted enabled=yes
-  when: postgrey_enable and ansible_virtualization_type != "docker"
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
     
 - name: docker postgrey is not running and service disabled

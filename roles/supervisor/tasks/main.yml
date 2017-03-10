@@ -18,5 +18,11 @@
   
 - name: supervisor is not running and service disabled
   service: name=supervisor state=stopped enabled=no
-  #when: ansible_virtualization_type != "docker"
+  when: not supervisor_enable
+  tags: service
+    
+- name: supervisor is running and service enable
+  service: name=supervisor state=stopped enabled=no
+  when: supervisor_enable and ansible_virtualization_type != "docker"
+  tags: service
     

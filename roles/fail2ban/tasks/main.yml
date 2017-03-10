@@ -15,7 +15,7 @@
 
 - name: fail2ban is running and service enabled
   service: name=fail2ban state=restarted enabled=yes
-  when: ansible_virtualization_type != "docker"
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
     
 - name: docker fail2ban is not running and service disabled

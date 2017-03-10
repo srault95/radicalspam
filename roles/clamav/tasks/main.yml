@@ -42,7 +42,7 @@
   
 - name: clamav-daemon is running and service enabled
   service: name=clamav-daemon state=restarted enabled=yes
-  when: ansible_virtualization_type != "docker"
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
     
 - name: docker clamav-daemon is not running and service disabled
@@ -52,7 +52,7 @@
     
 - name: clamav-freshclam is running and service enabled
   service: name=clamav-freshclam state=restarted enabled=yes
-  when: ansible_virtualization_type != "docker"
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
     
 - name: docker clamav-freshclam is not running and service disabled
