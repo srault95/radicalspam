@@ -1,0 +1,7 @@
+---
+
+supervisor_enable: true
+
+supervisor_http_host: 127.0.0.1:9000
+supervisor_http_user: 
+supervisor_http_password: 

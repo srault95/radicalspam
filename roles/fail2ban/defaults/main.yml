@@ -1,7 +1,7 @@
 ---
 
 fail2ban_ignoreip:
-  - 127.0.0.1
+  - 127.0.0.1/8
   
 fail2ban_bantime: 604800
 
@@ -12,4 +12,4 @@ fail2ban_maxretry: 1
 #yes, no, warn
 fail2ban_usedns: warn
   
-fail2ban_destemail: '{{root_email|default("root")}}'
+fail2ban_destemail: '{{root_email}}'

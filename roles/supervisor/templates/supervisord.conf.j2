@@ -3,7 +3,7 @@ file=/var/run/supervisor.sock
 chmod=0700
 
 [inet_http_server]
-port = 127.0.0.1:9001
+port = {{supervisor_http_host|default('127.0.0.1:9001')}}
 ;username = admin
 ;password = admin
 
@@ -23,24 +23,28 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisorctl]
 serverurl=unix:///var/run/supervisor.sock
 
+{% if mongodb_enable|default(False) %}
 [program:mongodb]
-command=/scripts/mongodb.sh
+command=mongod --dbpath /var/lib/mongodb --bind_ip 127.0.0.1 --nounixsocket --noauth --wiredTigerDirectoryForIndexes --directoryperdb --syslog
 priority=1
 autostart=false
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
+{% endif %}
 
+{% if redis_enable|default(False) %}
 [program:redis]
-command=/scripts/redis.sh
+command=redis-server /etc/redis/redis.conf
 priority=1
 autostart=false
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
+{% endif %}
 
 [program:freshclam]
-command=/scripts/freshclam.sh
+command=/usr/bin/freshclam --quiet -c 2 --enable-stats
 priority=2
 autostart=false
 autorestart=true
@@ -48,7 +52,7 @@ redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
 [program:clamd]
-command=/scripts/clamd.sh
+command=/usr/sbin/clamd -c /etc/clamav/clamd.conf
 priority=3
 autostart=false
 autorestart=true
@@ -56,55 +60,43 @@ redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
 ;[program:spamd]
-;command=/scripts/spamd.sh
+;command=spamd -u debian-spamd -g debian-spamd --create-prefs --max-children 5 --helper-home-dir=/var/lib/amavis/.spamassassin -i 127.0.0.1:783 --virtual-config-dir=/var/lib/users/spamassassin/%d
 ;priority=2
 ;autostart=false
 ;autorestart=true
 ;redirect_stderr=true
 ;stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
+{% if amavis_enable|default(False) %}
 [program:amavis]
-command=/scripts/amavis.sh
+command=/usr/sbin/amavisd-new foreground
 priority=5
 autostart=false
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
+{% endif %}
 
+{% if postgrey_enable|default(False) %}
 [program:postgrey]
-command=/scripts/postgrey.sh
+command=/usr/sbin/postgrey -v
 priority=5
 autostart=false
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
+{% endif %}
 
 [program:postfix]
-command=/scripts/postfix.sh
+command=/usr/local/bin/postfix-start
 priority=10
 autostart=false
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
 
-[program:rs-admin]
-command=/scripts/rs-admin.sh
-priority=20
-autostart=false
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/var/log/supervisor/%(program_name)s.log
-
-[program:rs-mta]
-command=/scripts/rs-mta.sh
-priority=20
-autostart=false
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/var/log/supervisor/%(program_name)s.log
-
 [program:start]
-command=/scripts/start-services.sh
+command=/usr/local/bin/start-services
 priority=999
 startretries=1
 autostart=true

@@ -11,13 +11,13 @@
 
 - name: postfix copy empty files
   copy: src=local/ dest=/etc/postfix/local
+  
+- name: postfix config - aliases
+  template: src=templates/aliases.j2 dest=/etc/aliases
+  tags: config
 
 - name: postfix config locals > directory
   template: src=templates/directory.j2 dest=/etc/postfix/local/directory
-  tags: config
-
-- name: postfix config locals > filters
-  template: src=templates/filters.j2 dest=/etc/postfix/local/filters
   tags: config
 
 - name: postfix config locals > relays

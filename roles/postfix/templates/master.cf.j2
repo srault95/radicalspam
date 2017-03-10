@@ -122,7 +122,7 @@ mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
 
-smtp-filter unix    -       -       -       -       {{postfix_max_servers|default(2)}}     smtp
+smtp-filter unix    -       -       -       -       {{postfix_filter_max_servers|default(2)}}     smtp
  -o smtp_data_done_timeout=1200
  -o smtp_send_xforward_command=yes
  -o disable_dns_lookups=yes
@@ -154,9 +154,4 @@ smtp-filter unix    -       -       -       -       {{postfix_max_servers|defaul
      -o local_recipient_maps=
      -o relay_recipient_maps=
      -o smtp_tls_security_level=none
-
-{% if postfix_transport_bind %}
-smtp-customers unix        -       -       n       -       10  smtp
-   -o smtp_bind_address={{postfix_transport_bind}}
-{% endif %}
 

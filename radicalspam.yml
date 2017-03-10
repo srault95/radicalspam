@@ -25,4 +25,5 @@
     - { role: postgrey, when: postgrey_enable }
     - { role: amavis, when: amavis_enable }
     - { role: docker, when: ansible_virtualization_type == "docker" }
+    - { role: supervisor, when: supervisor_enable }
   

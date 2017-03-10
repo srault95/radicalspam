@@ -25,7 +25,7 @@ LogVerbose false
 DatabaseDirectory /var/lib/clamav
 OfficialDatabaseOnly false
 SelfCheck 3600
-Foreground false
+Foreground {% if clamav_foreground %}true{% else %}false{% endif %}
 Debug false
 ScanPE true
 MaxEmbeddedPE 10M

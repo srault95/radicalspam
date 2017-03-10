@@ -26,7 +26,7 @@
   apt: name={{ item }} state=latest install_recommends=no
   with_items:
     - amavisd-new
-    - amavisd-new-postfix
+    #- amavisd-new-postfix
   tags: install
 
 - name: add clamav in amavis group
@@ -63,9 +63,9 @@
   template: src=templates/98-radicalspam.j2 dest=/etc/amavis/conf.d/98-radicalspam backup=yes
   tags: config
 
-- name: amavis config 99-radicalspam-output (optional)
-  template: src=templates/99-radicalspam-output.j2 dest=/etc/amavis/conf.d/99-radicalspam-output backup=yes
-  tags: config
+#- name: amavis config 99-radicalspam-output (optional)
+#  template: src=templates/99-radicalspam-output.j2 dest=/etc/amavis/conf.d/99-radicalspam-output backup=yes
+#  tags: config
 
 - name: amavis config mynetworks
   template: src=templates/mynetworks.j2 dest=/var/lib/amavis/config/mynetworks backup=yes

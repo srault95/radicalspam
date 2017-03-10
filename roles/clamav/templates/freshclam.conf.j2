@@ -6,7 +6,7 @@ LogFacility LOG_MAIL
 #LogFileMaxSize 0
 LogRotate false
 LogTime true
-Foreground false
+Foreground {% if clamav_foreground %}true{% else %}false{% endif %}
 Debug false
 MaxAttempts 5
 DatabaseDirectory /var/lib/clamav

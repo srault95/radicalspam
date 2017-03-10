@@ -58,14 +58,14 @@ service syslog-ng restart
 clamav_update
 sa_update
 amavis_config
-service postgrey restart
+service postgrey start
 postfix_config
 service fail2ban restart
 
-sleep 10
+sleep 2
 
 #TODO: afficher net interfaces
 echo "RadicalSpam is ready !"
 
-touch /var/log/empty.log
-tail -f /var/log/empty.log
+#touch /var/log/empty.log
+#tail -f /var/log/empty.log

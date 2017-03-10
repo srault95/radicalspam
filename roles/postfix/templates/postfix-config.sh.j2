@@ -4,10 +4,6 @@ cd /etc/postfix/local
 
 postmap directory
 
-{% if postfix_filter_multi_enable %}
-postmap filters
-{% endif %}
-
 postmap relays
 
 {% if postfix_spoofing_enable %}
@@ -29,8 +25,5 @@ postmap canonical-sender
 postmap exceptions-helo
 postmap exceptions-senders
 postmap whitelist-clients
-
-#postmap mynetworks-lan
-#postmap mynetworks-wan
 
 newaliases

@@ -42,10 +42,12 @@ check_root
 check_memory
 check_disk
 check_port "25"
-check_port "8080"
-        
-#docker rmi -f ${DOCKER_IMAGE}
-#docker rm -v ${CT_NAME}
+check_port "465"
+#check_port "8080"
+
+docker rm -v ${CT_NAME}
+docker rmi -f ${DOCKER_IMAGE}:${RADICALSPAM_VERSION}
+docker rmi -f ${DOCKER_IMAGE}
 
 docker build --pull --force-rm --no-cache -t ${DOCKER_IMAGE}:${RADICALSPAM_VERSION} . || exit 1
 
@@ -56,17 +58,24 @@ docker run -d \
    --privileged \
    --net host --pid=host \
    -v /etc/localtime:/etc/localtime \
-   -v $PWD/store/log:/var/log \
-   -v $PWD/store/amavis/config:/var/lib/amavis/config \
-   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
-   -v $PWD/store/postfix/local:/etc/postfix/local \
-   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
-   -v $PWD/store/postfix/spool:/var/spool/postfix \
-   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
-   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
-   -v $PWD/store/clamav:/var/lib/clamav \
-   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
    ${DOCKER_IMAGE}
+
+#docker run -d \
+#   --name ${CT_NAME} \
+#   --privileged \
+#   --net host --pid=host \
+#   -v /etc/localtime:/etc/localtime \
+#   -v $PWD/store/log:/var/log \
+#   -v $PWD/store/amavis/config:/var/lib/amavis/config \
+#   -v $PWD/store/amavis/virusmails:/var/lib/amavis/virusmails \
+#   -v $PWD/store/postfix/local:/etc/postfix/local \
+#   -v $PWD/store/postfix/ssl:/etc/postfix/ssl \
+#   -v $PWD/store/postfix/spool:/var/spool/postfix \
+#   -v $PWD/store/etc/postgrey/etc:/etc/postgrey \
+#   -v $PWD/store/etc/postgrey/data:/var/lib/postgrey \
+#   -v $PWD/store/clamav:/var/lib/clamav \
+#   -v $PWD/store/spamassassin/users:/var/lib/users/spamassassin \
+#   ${DOCKER_IMAGE}
 
 RET=$?   
 

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+{% if mongodb_enable|default(False) %}
+echo "Start mongodb..."
+supervisorctl start mongodb
+sleep 2
+{% endif %}
+
+{% if redis_enable|default(False) %}
+echo "Start redis..."
+supervisorctl start redis
+sleep 1
+{% endif %}
+
+echo "Start freshclam..."
+supervisorctl start freshclam
+
+echo "Start clamd..."
+supervisorctl start clamd
+sleep 2
+
+{% if amavis_enable|default(False) %}
+echo "Start amavis..."
+supervisorctl start amavis
+sleep 2
+{% endif %}
+
+{% if postgrey_enable|default(False) %}
+echo "Start postgrey..."
+supervisorctl start postgrey
+sleep 1
+{% endif %}
+
+echo "Start postfix..."
+supervisorctl start postfix
+sleep 2
+

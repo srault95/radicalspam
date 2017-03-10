@@ -29,6 +29,9 @@
     - ufw
   tags: install
 
+- name: cron is running and service enabled
+  service: name=cron state=started enabled=yes
+
 - name: configure ovh failover interface
   template: src=templates/ovh-failover-interface.j2 dest=/etc/network/interfaces.d/ens3:0.cfg force=yes backup=yes
   when: failover_address is defined and ansible_virtualization_type != "docker"

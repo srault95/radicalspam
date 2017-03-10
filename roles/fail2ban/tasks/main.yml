@@ -5,9 +5,9 @@
     - fail2ban
   tags: install
 
-#- name: fail2ban configure
-#  template: src=templates/jail.conf.j2 dest=/etc/fail2ban/jail.conf backup=yes
-#  tags: config
+- name: fail2ban configure
+  template: src=templates/jail.conf.j2 dest=/etc/fail2ban/jail.conf backup=yes
+  tags: config
 
 - name: fail2ban is running and service enabled
   service: name=fail2ban state=restarted enabled=yes

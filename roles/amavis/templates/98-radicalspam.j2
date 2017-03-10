@@ -3,7 +3,7 @@ use strict;
 $daemon_user  = 'amavis';
 $daemon_group = 'amavis';
 
-$max_servers = {{postfix_max_servers|default(2)}};
+$max_servers = {{amavis_max_servers|default(2)}};
 
 @bypass_header_checks_maps 	= (1);
 
@@ -27,6 +27,7 @@ $enable_dkim_signing = 0;
 $virus_quarantine_method        = 'local:virus/%i-%n.gz';
 $virus_quarantine_to            = 'virus-quarantine';
 
+#$banned_files_quarantine_method = 'smtp:[127.0.0.1]:10025';
 $banned_files_quarantine_method = 'local:banned/%i-%n.gz';
 $banned_quarantine_to           = 'banned-quarantine';
 
@@ -50,20 +51,23 @@ $undecipherable_subject_tag 	= '[*** UNCHECKED ***] ';
 $remove_existing_x_scanned_headers 	= 1;
 $remove_existing_spam_headers  		= 1;
 
+#listen_sockets list
 #$inet_socket_port        	 = read_array("$MYHOME/config/inet_socket_port");
 $inet_socket_port               = [10024, 9998];
 
 @local_domains_maps 		= ( read_hash("$MYHOME/config/local_domains") );
 
-@mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
-                  10.0.0.0/8 172.17.0.0/16 172.16.0.0/12 192.168.0.0/16 );
+#@mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
+#                  10.0.0.0/8 172.17.0.0/16 172.16.0.0/12 192.168.0.0/16 );
 
-@mynetworks_maps = (read_array("$MYHOME/config/mynetworks"), \@mynetworks);
+#@mynetworks_maps = (read_array("$MYHOME/config/mynetworks"), \@mynetworks);
+
+@mynetworks_maps = (read_cidr("$MYHOME/config/mynetworks"));
+@client_ipaddr_policy = map(($_,'MYNETS'), @mynetworks_maps);
 
 $forward_method 		= "smtp:[127.0.0.1]:10025";
 $notify_method 			= $forward_method;
 
-#FIXME: redis Insecure dependency in socket while running
 {% if amavis_redis_enable %}
 @storage_redis_dsn = ( {server=>"{{amavis_redis_server}}", db_id=>1} );
 $redis_logging_key = 'amavis-log';
@@ -75,6 +79,12 @@ $redis_logging_queue_size_limit = 300000;  # about 250 MB / 100000
 @virus_lovers_maps 		= ( read_hash("$MYHOME/config/virus_lovers") );
 @spam_lovers_maps 		= ( read_hash("$MYHOME/config/spam_lovers") );
 @banned_files_lovers_maps 	= ( read_hash("$MYHOME/config/banned_lovers") );
+
+{% if amavis_bypass_abuse %}
+map { $bypass_spam_checks{lc($_)}=1 } (qw(
+   abuse@
+));
+{% endif %}
 
 @bypass_virus_checks_maps = (
    \%bypass_virus_checks, \@bypass_virus_checks_acl, \$bypass_virus_checks_re);
@@ -88,32 +98,49 @@ $allowed_added_header_fields{lc('X-Relay-Country')} 	= 1;
 $allowed_added_header_fields{lc('X-Relay-Countries')} 	= 1;
 $allowed_added_header_fields{lc('X-RadicalSpam')} 	= 1;
 
-$final_virus_destiny  = D_DISCARD;
-$final_banned_destiny = D_DISCARD;
-$final_spam_destiny   = D_PASS;
-$final_bad_header_destiny = D_PASS;
-$final_unchecked_destiny = D_BOUNCE;
+#$notify_virus_admin_templ       = read_text("$MYHOME/notify_virus_admin.txt");
+#$notify_virus_recips_templ      = read_text("$MYHOME/notify_virus_recips.txt");
+#$notify_spam_admin_templ        = read_text("$MYHOME/notify_spam_admin.txt");
 
-$warnbannedsender 		= 0;
-$warnbadhsender 		= 0;
-$warnvirusrecip 		= 1;
-$warnbannedrecip 		= 1;
-$warnbadhrecip 			= 0;
-$warn_offsite 			= 1;
+%final_destiny_by_ccat = (
+  CC_VIRUS,      D_DISCARD,
+  CC_BANNED,     D_DISCARD,
+  CC_SPAM,       D_PASS,
+  CC_BADH,       D_PASS,
+  CC_OVERSIZED,  D_PASS,
+  CC_CLEAN,      D_PASS,
+  CC_UNCHECKED,  {{amavis_destiny_unchecked|default('D_BOUNCE')}},
+  CC_CATCHALL,   D_PASS,
+);
+
+$warnvirussender                = 0;
+$warnspamsender                 = 0;
+$warnbannedsender               = 0;
+$warnbadhsender                 = 0;
+$warnvirusrecip                 = 1;
+$warnbannedrecip                = 1;
+$warnbadhrecip                  = 0;
+$warn_offsite                   = 1;
+
+#$final_virus_destiny  = D_DISCARD;
+#$final_banned_destiny = D_DISCARD;
+#$final_spam_destiny   = D_PASS;
+#$final_bad_header_destiny = D_PASS;
+#$final_unchecked_destiny = D_BOUNCE;
 
 %banned_rules = (
   'DEFAULT' => new_RE(
-    qr'.\.(ade|adp|app|bas|bat|chm|cmd|com|cpl|crt|fxp|hlp|hta|inf|ins|isp|lnk|mdt|mdw|msc|msp|mst|ops|pif|prg|reg|scr|sct|shb|shs|vbs|wsc|wsf|wsh)$'i,
+    qr'.\.({{amavis_banned_files|join('|')}})$'i,
   ),
 );
 
 $sa_local_tests_only 		= 0;
-$sa_mail_body_size_limit 	= 400*1024; 
+$sa_mail_body_size_limit 	= {{amavis_sa_mail_body_size_limit|default('400*1024')}}; 
 
 $sa_tag_level_deflt  		= -999.0;
-$sa_tag2_level_deflt 		= {{sa_required_score|default(8.0)}};
-$sa_tag3_level_deflt 		= 10.0;
-$sa_kill_level_deflt 		= 10.0;
+$sa_tag2_level_deflt 		= {{amavis_sa_tag2_level_deflt|default(8.0)}};
+$sa_tag3_level_deflt 		= {{amavis_sa_tag3_level_deflt|default(10.0)}};
+$sa_kill_level_deflt 		= $sa_tag3_level_deflt;
 $sa_dsn_cutoff_level 		= 999.0;
 $sa_quarantine_cutoff_level 	= 50;
 $sa_crediblefrom_dsn_cutoff_level = 18; # likewise, but for a likely valid From
@@ -121,8 +148,8 @@ $sa_quarantine_cutoff_level = 999; # disable quarantine
 $bounce_killer_score = 100;  # spam score points to add for joe-jobbed bounces
 
 $sa_spam_subject_tag 		= undef;
-@spam_subject_tag2_maps 	= ('[*** ? SPAM ***] ');
-@spam_subject_tag3_maps 	= ('[*** SPAM ***] ');
+@spam_subject_tag2_maps 	= ('{{amavis_spam_subject_tag2_maps}}');
+@spam_subject_tag3_maps 	= ('{{amavis_spam_subject_tag3_maps}}');
 
 my $my_from			= '{{root_email}}';
 my $my_from_rfc2822		= '"Alert" <{{root_email}}>';
@@ -138,6 +165,35 @@ $mailfrom_notify_recip		= $my_from;		#notif. sender
 $mailfrom_notify_spamadmin	= $my_from;		#notif. sender
 $mailfrom_to_quarantine 	= '';
 
+@virus_name_to_spam_score_maps =
+  (new_RE(  # the order matters, first match wins
+    [ qr'^Structured\.(SSN|CreditCardNumber)\b'            => 0.1 ],
+    [ qr'^(Heuristics\.)?Phishing\.'                       => 0.1 ],
+    [ qr'^(Email|HTML)\.Phishing\.(?!.*Sanesecurity)'      => 0.1 ],
+    [ qr'^Sanesecurity\.(Malware|Rogue|Trojan)\.' => undef ],# keep as infected
+    [ qr'^Sanesecurity\.'                                  => 0.1 ],
+    [ qr'^Sanesecurity_PhishBar_'                          => 0   ],
+    [ qr'^Sanesecurity.TestSig_'                           => 0   ],
+    [ qr'^Email\.Spam\.Bounce(\.[^., ]*)*\.Sanesecurity\.' => 0   ],
+    [ qr'^Email\.Spammail\b'                               => 0.1 ],
+    [ qr'^MSRBL-(Images|SPAM)\b'                           => 0.1 ],
+    [ qr'^VX\.Honeypot-SecuriteInfo\.com\.Joke'            => 0.1 ],
+    [ qr'^VX\.not-virus_(Hoax|Joke)\..*-SecuriteInfo\.com(\.|\z)' => 0.1 ],
+    [ qr'^Email\.Spam.*-SecuriteInfo\.com(\.|\z)'          => 0.1 ],
+    [ qr'^Safebrowsing\.'                                  => 0.1 ],
+    [ qr'^winnow\.(phish|spam)\.'                          => 0.1 ],
+    [ qr'^INetMsg\.SpamDomain'                             => 0.1 ],
+    [ qr'^Doppelstern\.(Spam|Scam|Phishing|Junk|Lott|Loan)'=> 0.1 ],
+    [ qr'^Bofhland\.Phishing'                              => 0.1 ],
+    [ qr'^ScamNailer\.'                                    => 0.1 ],
+    [ qr'^HTML/Bankish'                                    => 0.1 ],  # F-Prot
+    [ qr'^PORCUPINE_JUNK'                                  => 0.1 ],
+    [ qr'^PORCUPINE_PHISHING'                              => 0.1 ],
+    [ qr'-SecuriteInfo\.com(\.|\z)'         => undef ],  # keep as infected
+    [ qr'^MBL_NA\.UNOFFICIAL'               => 0.1 ],    # false positives
+    [ qr'^MBL_'                             => undef ],  # keep as infected
+  ));
+
 @av_scanners = (
  ['ClamAV-clamd',
    \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.ctl"],
@@ -152,6 +208,44 @@ $mailfrom_to_quarantine 	= '';
 );
 
 @debug_sender_maps              = ( read_hash("$MYHOME/config/debug_senders") );
+
+#from @mynetworks
+$policy_bank{'MYNETS'} = {  
+   
+   originating                  => 1,
+   
+   redis_logging_key 			=> 'amavis-log-output',
+   
+   allow_disclaimers            => 1,
+   os_fingerprint_method        => undef,
+   bypass_spam_checks_maps      => [1],
+   bypass_banned_checks_maps    => [1],
+   bypass_virus_checks_maps     => [1],
+   bypass_header_checks_maps    => [1],
+
+   final_virus_destiny          => D_PASS,
+   final_banned_destiny         => D_PASS,
+   final_spam_destiny           => D_PASS,
+   final_bad_header_destiny     => D_PASS,
+
+   newvirus_admin_maps          => undef,
+   virus_admin_maps             => undef,
+   banned_admin_maps            => undef,
+   spam_admin_maps              => undef,
+
+   virus_quarantine_to_maps     => undef,
+   spam_quarantine_to_maps      => undef,
+   banned_quarantine_to_maps    => undef,
+
+   spam_modifies_subj_maps      => 0,
+
+   warnbannedsender             => 0,
+   warnbadhsender               => 0,
+   warn_offsite                 => 0,
+   warnbannedrecip_maps         => 0,
+   warnvirusrecip_maps          => 0,
+
+};
 
 #------------ Do not modify anything below this line -------------
 1;  # ensure a defined return

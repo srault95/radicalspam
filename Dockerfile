@@ -15,4 +15,16 @@ RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
 
 EXPOSE 25/tcp 465/tcp
 
-CMD ["/usr/bin/radicalspam-start"]
+VOLUME [
+ '/var/log', 
+ '/var/lib/amavis/config',
+ '/var/lib/amavis/virusmails',
+ '/etc/postfix/local',
+ '/etc/postfix/ssl',
+ '/var/spool/postfix',
+ '/etc/postgrey',
+ '/var/lib/postgrey',
+ '/var/lib/clamav',
+ '/var/lib/users/spamassassin']
+
+CMD ["/usr/local/bin/supervisor-start"]

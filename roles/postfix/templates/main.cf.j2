@@ -1,13 +1,12 @@
-#smtpd_reject_unlisted_recipient = yes
-#smtpd_reject_unlisted_sender = no
-#mynetworks = 127.0.0.0/8
-#mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-#inet_interfaces = 127.0.0.1
+
+mynetworks = {{mynetworks|join(' ')}}
+
 inet_interfaces = all
 
 smtpd_banner = secure SMTP
 
-message_size_limit = {{message_size_limit}}
+message_size_limit = {{postfix_message_size_limit|default(12582912)}}
+mailbox_size_limit = 0
 
 recipient_canonical_maps = hash:/etc/postfix/local/canonical-recipient
 
@@ -28,8 +27,6 @@ smtpd_delay_open_until_valid_rcpt = yes
 biff = no
 
 home_mailbox = .maildir/
-
-mailbox_size_limit = 0
 
 smtp_skip_5xx_greeting = no
 
@@ -52,14 +49,12 @@ smtpd_sender_restrictions =
 	{% if postfix_spoofing_enable %}check_sender_access hash:/etc/postfix/local/spoofing, {% endif %}
 	check_sender_access hash:/etc/postfix/local/blacklist-senders
 
-smtpd_recipient_restrictions = 
+smtpd_relay_restrictions = 
 	check_recipient_access hash:/etc/postfix/local/blacklist-recipients, 
 	reject_non_fqdn_recipient, 
-	reject_unauth_destination, 
 	{% if postfix_verify_enable %}check_recipient_access hash:/etc/postfix/local/verify-recipients, {% endif %}
 	{% if postgrey_enable %}check_policy_service inet:{{postgrey_host}}:{{postgrey_port}}, {% endif %}
-	reject_unlisted_recipient
-	{% if postfix_filter_multi_enable %}, check_recipient_access hash:/etc/postfix/local/filters{% endif %}
+	reject_unauth_destination 
 
 append_at_myorigin = no
 
@@ -81,7 +76,6 @@ readme_directory = no
 #smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 #smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
-#smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
 #myhostname = radicalspam.localhost.net
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
@@ -95,4 +89,12 @@ smtpd_proxy_filter = {{postfix_filter_host}}:{{postfix_filter_port}}
 {% else %}
 content_filter = smtp-filter:[{{postfix_filter_host}}]:{{postfix_filter_port}}
 {% endif %}
+{% endif %}
+
+{% if relayhost %}
+relayhost = {{relayhost}}
+{% endif %}
+
+{% if postfix_smtp_bind_address %}
+smtp_bind_address = {{postfix_smtp_bind_address}}
 {% endif %}
