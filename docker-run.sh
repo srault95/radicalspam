@@ -45,6 +45,7 @@ check_port "25"
 check_port "465"
 #check_port "8080"
 
+docker kill ${CT_NAME}
 docker rm -v ${CT_NAME}
 docker rmi -f ${DOCKER_IMAGE}:${RADICALSPAM_VERSION}
 docker rmi -f ${DOCKER_IMAGE}
