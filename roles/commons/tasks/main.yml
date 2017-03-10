@@ -27,6 +27,7 @@
     - ca-certificates
     - curl
     - ufw
+    - python3-pip
   tags: install
 
 - name: cron is running and service enabled

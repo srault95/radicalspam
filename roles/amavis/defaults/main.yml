@@ -6,6 +6,9 @@ amavis_bypass_abuse: true
 
 #smtp:[127.0.0.1]:10025 or local:banned/%i-%n.gz
 amavis_quarantine_method: smtp:[127.0.0.1]:10025
+amavis_quarantine_to: "{{root_email}}" 
+
+amavis_archive_enable: false
 
 #D_BOUNCE | D_PASS | D_DISCARD | D_REJECT ?
 amavis_destiny_unchecked: D_BOUNCE

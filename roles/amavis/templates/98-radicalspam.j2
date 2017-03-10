@@ -24,19 +24,20 @@ $enable_dkim_signing = 0;
 
 #TODO: quarantaine smtp
 
-$virus_quarantine_method        = 'local:virus/%i-%n.gz';
-$virus_quarantine_to            = 'virus-quarantine';
+$virus_quarantine_method        = '{{amavis_quarantine_method}}';
+$virus_quarantine_to            = '{{amavis_quarantine_to}}';
 
-#$banned_files_quarantine_method = 'smtp:[127.0.0.1]:10025';
-$banned_files_quarantine_method = 'local:banned/%i-%n.gz';
-$banned_quarantine_to           = 'banned-quarantine';
+$banned_files_quarantine_method = '{{amavis_quarantine_method}}';
+$banned_quarantine_to           = '{{amavis_quarantine_to}}';
 
 #$spam_quarantine_method         = 'local:spam/%i-%n.gz';
 $spam_quarantine_to             = undef;
 $spam_quarantine_bysender_to    = undef;
 
-#$archive_quarantine_method      = 'local:archives/%i-%n.gz';
-#$archive_quarantine_to          = 'archive-quarantine';
+{% if amavis_archive_enable %}
+$archive_quarantine_method      = 'local:archives/%i-%n.gz';
+$archive_quarantine_to          = 'archive-quarantine';
+{% endif %}
 
 #$clean_quarantine_method        = 'local:clean/%i-%n.gz';
 #$clean_quarantine_to            = 'clean-quarantine';
