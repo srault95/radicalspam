@@ -78,11 +78,11 @@ def attach(filepath=None, filename=None, mimetype=None):
         msg_file.add_header('Content-Disposition', 'attachment', filename=filename)
         return msg_file
 
-FILTER_CLEAN = 0    
-FILTER_SPAM = 1
-FILTER_VIRUS = 2
-FILTER_BANNED = 3
-FILTER_UNCHECKED = 4
+FILTER_CLEAN = 1
+FILTER_SPAM = 2
+FILTER_VIRUS = 3
+FILTER_BANNED = 4
+FILTER_UNCHECKED = 5
 
 FILTER_STATUS_CHOICES = [FILTER_CLEAN, FILTER_SPAM, FILTER_VIRUS, FILTER_BANNED, FILTER_UNCHECKED]    
 

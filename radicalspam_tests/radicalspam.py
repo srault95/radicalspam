@@ -297,7 +297,7 @@ class RadicalSpamTesting(object):
         
         msg = message.MessageFaker(id="x1",
                            is_out=False, 
-                           #from_ip="1.1.1.1", 
+                           from_ip="1.1.1.1", #attention rbl 
                            #from_hostname, 
                            #from_heloname, 
                            #enveloppe_sender="sender@external.com", 
