@@ -152,12 +152,18 @@ class RadicalSpamTesting(object):
         print(cmd)
         if not restore:
             cmd_split = value.split('=', 1)
-            self.postconf_backup[cmd_split[0]] = cmd_split[1]
+            old_value = self.postconf_get(cmd_split[0])
+            self.postconf_backup[cmd_split[0]] = old_value
         r = delegator.run(cmd)
         #r = delegator.run('%s -e %s' % (cmd, value))
         if r.return_code != 0:
             raise Exception("ERROR[%s] CODE[%s]" % (r.err, r.return_code))
         return r.return_code
+
+    def postconf_get(self, param):
+        cmd = self.get_cmd('postconf -h %s' % param)
+        r = delegator.run(cmd)
+        return r.out.strip()
 
     def is_postfix_value(self, param, value):
         #cmd = self.get_cmd('postconf')
