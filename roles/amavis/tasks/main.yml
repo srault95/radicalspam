@@ -32,14 +32,11 @@
 - name: add clamav in amavis group
   user: name=clamav state=present groups=amavis
 
-- name: add amavis in clamav group
-  user: name=amavis state=present groups=clamav
-
 - name: add debian-spamd in amavis group
   user: name=debian-spamd state=present groups=amavis
-  
-- name: add amavis in debian-spamd group
-  user: name=amavis state=present groups=debian-spamd
+
+- name: add amavis in clamav and debian-spamd groups
+  user: name=amavis state=present groups=clamav,debian-spamd
 
 - name: amavis create directories
   file: path={{item}} state=directory force=yes mode=0770 group=amavis owner=amavis

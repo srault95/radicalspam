@@ -23,7 +23,7 @@
   tags: config
   
 - name: supervisor is running and service enable
-  service: name=supervisor state=started enabled=yes
+  service: name=supervisor state=restarted enabled=yes sleep=15
   when: supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
 

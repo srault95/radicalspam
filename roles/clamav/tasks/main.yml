@@ -14,6 +14,10 @@
 - name: clamav create log directory
   file: path=/var/log/clamav state=directory force=yes mode=0755 owner=clamav group=clamav
   tags: config
+  
+- name: clamav create run directory
+  file: path=/var/run/clamav state=directory force=yes mode=0755 owner=clamav group=clamav
+  tags: config
       
 - name: clamav clamd config
   template: src=templates/clamd.conf.j2 dest=/etc/clamav/clamd.conf backup=yes

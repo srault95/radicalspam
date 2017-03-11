@@ -7,7 +7,7 @@ FixStaleSocket true
 LocalSocketGroup clamav
 LocalSocketMode 666
 User clamav
-AllowSupplementaryGroups false
+AllowSupplementaryGroups true
 ScanMail true
 ScanArchive true
 ArchiveBlockEncrypted false
@@ -19,7 +19,7 @@ MaxThreads 12
 MaxConnectionQueueLength 15
 LogSyslog {{clamav_syslog_enable|default('true')}}
 LogRotate true
-LogFacility LOG_LOCAL6
+LogFacility LOG_MAIL
 LogClean false
 LogVerbose false
 DatabaseDirectory /var/lib/clamav
