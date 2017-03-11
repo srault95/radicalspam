@@ -57,13 +57,14 @@
 
 """
 
+import time
 import os
 from pathlib import Path
 from pprint import pprint
 import contextlib
 import delegator
 
-from radicalspam_tests.tools.message import MessageFaker
+from radicalspam_tests.tools import message
 from radicalspam_tests.tools import pyclamd
 from radicalspam_tests.tools.mailer import SMTPClient
 from radicalspam_tests.tools.server import get_free_port, FakeSMTPServer, AsyncorePoller
@@ -183,6 +184,9 @@ class RadicalSpamTesting(object):
         #transport_maps = hash:/etc/postfix/local/transport
         self.postconf_set("transport_maps=")
         
+        #TODO: option
+        self.postconf_set("content_filter=")
+        
         if self.is_postfix_value('smtpd_delay_reject', 'yes'):
             self.postconf_set("smtpd_delay_reject=no")
             #r = delegator.run('%s -e "smtpd_delay_reject=no"' % cmd)
@@ -291,7 +295,7 @@ class RadicalSpamTesting(object):
                             port=self.postfix_port,
                             xclient_enable=True)
         
-        msg = MessageFaker(id="x1",
+        msg = message.MessageFaker(id="x1",
                            is_out=False, 
                            #from_ip="1.1.1.1", 
                            #from_hostname, 
@@ -305,7 +309,7 @@ class RadicalSpamTesting(object):
                            #random_files, 
                            #is_multipart, 
                            #is_bounce, 
-                           #filter_status, 
+                           filter_status=message.FILTER_CLEAN, 
                            #min_size, 
                            #sent_date, 
                            #lang, 
@@ -319,6 +323,9 @@ class RadicalSpamTesting(object):
         result = client.send(msg)
         print("------------------RESULT-----------------------")
         pprint(result)
+        
+        print("WAIT....")
+        time.sleep(10)
         
         print("--------------RECEIVE MESSAGES-----------------")
         pprint(self.server._messages)
