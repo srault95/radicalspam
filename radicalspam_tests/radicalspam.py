@@ -151,7 +151,7 @@ class RadicalSpamTesting(object):
         cmd = self.get_cmd('postconf -e %s' % value)
         print(cmd)
         if not restore:
-            cmd_split = cmd.split('=', 1)
+            cmd_split = value.split('=', 1)
             self.postconf_backup[cmd_split[0]] = cmd_split[0]
         r = delegator.run(cmd)
         #r = delegator.run('%s -e %s' % (cmd, value))
@@ -319,8 +319,6 @@ class RadicalSpamTesting(object):
         
 
 if __name__ == "__main__":
-    r = RadicalSpamTesting(docker_cmd="docker exec -it radicalspam bash -c", 
-                           supervisor_url="http://127.0.0.1:9000/RPC2", 
-                           postfix_host="127.0.0.1")
-        
+    #r = RadicalSpamTesting(docker_cmd="docker exec -it radicalspam bash -c", supervisor_url="http://127.0.0.1:9000/RPC2", postfix_host="127.0.0.1")
+    r = RadicalSpamTesting(supervisor_url="http://127.0.0.1:9000/RPC2", postfix_host="127.0.0.1")
     r.run_all_tests()

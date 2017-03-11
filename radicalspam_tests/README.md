@@ -3,6 +3,9 @@
 
 ## Installation
 
+	docker exec -it radicalspam bash
+	pip3 install virtualenv
+	
 	apt-get install --no-install-recommends python3-pip
 	pip3 install -U pip virtualenv
 	virtualenv ./myenv
