@@ -307,9 +307,13 @@ class RadicalSpamTesting(object):
                            domains=self.domains, 
                            mynetworks=self.mynetworks
                            ).create_message()
+        print("----------------MESSAGE------------------------")
+        pprint(msg)
+        
         result = client.send(msg)
         print("------------------RESULT-----------------------")
         pprint(result)
+        
         print("--------------RECEIVE MESSAGES-----------------")
         pprint(self.server._messages)
         print("-----------------------------------------------")
