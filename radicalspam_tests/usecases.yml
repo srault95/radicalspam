@@ -1,0 +1,68 @@
+debug_level: 0
+
+default_server:
+ host: 127.0.0.1
+ port: 25
+ 
+xclient_lan: &xclient_lan
+  ADDR: 192.168.1.1
+  NAME: mail.radical-spam.com
+  HELO: radical-spam.com
+
+xclient_ext1: &xclient_ext1
+  ADDR: 1.1.1.1
+  NAME: mx.client_ext1.org
+  HELO: client_ext1.org
+
+cases:
+
+  #CASE1
+  case1:
+    comment: Mail sortant - Normal
+
+    xclient:
+      ADDR: 192.168.1.1
+      NAME: mail.radical-spam.com
+      HELO: radical-spam.com
+
+    sender:
+      email: user1@radical-spam.com
+      ret: 250
+
+    recipients:
+      recipient1:
+        email: recipient1@localhost.org
+        ret: 250
+
+  #CASE2
+  case2:
+    comment: Mail entrant - Normal
+
+    xclient: *xclient_ext1
+
+    sender:
+      email: recipient1@localhost.org
+      ret: 250
+
+    recipients:
+      recipient1:
+        email: user1@radical-spam.com
+        ret: 250
+
+  #CASE3
+  case3:
+    comment: Mail sortant - Normal - Multi-recipients
+
+    xclient: *xclient_lan
+
+    sender:
+      email: user1@radical-spam.com
+      ret: 250
+
+    recipients:
+      recipient1:
+        email: recipient1@localhost.org
+        ret: 250
+      recipient2:
+        email: recipient2@localhost.org
+        ret: 250

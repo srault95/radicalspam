@@ -11,6 +11,6 @@ transports:
 mynetworks:
   - 127.0.0.0/8
   
-relayhost:  
+relayhost:
   
 root_email: root@example.net
