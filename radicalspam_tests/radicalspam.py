@@ -293,7 +293,8 @@ class RadicalSpamTesting(object):
         """
         client = SMTPClient(host=self.postfix_host, 
                             port=self.postfix_port,
-                            xclient_enable=True)
+                            xclient_enable=True,
+                            debug_level=1)
         
         msg = message.MessageFaker(id="x1",
                            is_out=False, 
