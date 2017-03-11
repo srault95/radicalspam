@@ -152,7 +152,7 @@ class RadicalSpamTesting(object):
         print(cmd)
         if not restore:
             cmd_split = value.split('=', 1)
-            self.postconf_backup[cmd_split[0]] = cmd_split[0]
+            self.postconf_backup[cmd_split[0]] = cmd_split[1]
         r = delegator.run(cmd)
         #r = delegator.run('%s -e %s' % (cmd, value))
         if r.return_code != 0:
