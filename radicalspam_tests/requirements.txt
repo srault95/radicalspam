@@ -1,5 +1,5 @@
 six
 delegator.py
 PyYAML
-fake-factory
+Faker
 arrow
