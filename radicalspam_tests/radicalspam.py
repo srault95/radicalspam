@@ -149,7 +149,7 @@ class RadicalSpamTesting(object):
         return "%s \"%s\"" % (self.docker_cmd, cmd)
         
     def postconf_set(self, value, restore=False):
-        cmd = self.get_cmd('postconf -e %s' % value)
+        cmd = self.get_cmd('postconf -e \"%s\"' % value)
         print(cmd)
         if not restore:
             cmd_split = value.split('=', 1)
@@ -191,7 +191,7 @@ class RadicalSpamTesting(object):
          
         """
 
-        self.postconf_set("smtpd_client_restrictions=permit_mynetworks, check_client_access hash:/etc/postfix/local/whitelist-clients, check_client_access hash:/etc/postfix/local/blacklist-clients")
+        self.postconf_set("smtpd_client_restrictions=permit_mynetworks,check_client_access hash:/etc/postfix/local/whitelist-clients, check_client_access hash:/etc/postfix/local/blacklist-clients")
         self.postconf_set("smtpd_relay_restrictions=check_recipient_access hash:/etc/postfix/local/blacklist-recipients, reject_non_fqdn_recipient, reject_unauth_destination")
         
         #TODO: option
