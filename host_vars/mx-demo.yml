@@ -1,0 +1,23 @@
+#OVH VPS cloud only
+#failover_address:  1.1.1.1
+#failover_name: ens3:0
+
+hostname_fqdn: mx-demo.radical-spam.com
+hostname: mx-demo
+
+domains: 
+  - radical-spam.com
+  
+transports:
+  radical-spam.com: relay:[178.32.109.159]:1025 #hub mailhog
+  
+mynetworks:
+  - 127.0.0.0/8
+  - 94.23.34.88/32 #hub
+  - 90.127.182.25/32 #maison
+  
+root_email: root@radical-spam.com
+
+fail2ban_ignoreip:
+  - 94.23.34.88/32 #hub
+  - 90.127.182.25/32 #maison

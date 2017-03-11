@@ -1,35 +1,34 @@
 #!/usr/bin/env python
 
 """
-- Pré-configurer RS pour les tests ou s'adapter à la config ?
-    - Test de RS en version demo
-    - Test de RS en prod !
+- Déployer pour un vrai domaine:
+    - livrer où ensuite ?
 
-- Lancer un serveur smtp en tâche de fond
-    - recevra les mails sortant par relayhosts ou transport ?
-    - comment éviter dépendances: compiler avec pyinstaller ?
+- Voir settings par fichier yaml ou env ou args ?
+- Envoyer tous les mails de tests et attendre résultats !
+    - gérer pb avec greylist: mettre en whitelist ip nécessaire ?    
+- Enregistrer les datas avant la fin et les compléter ensuite
+- Générer un rapport HTML ? à partir des données json ?
+- Traiter les cas sans rapport direct avec l'envoi d'un mail:
+    - Supervisor
+        - status de chaque service et uptime
+    - La timezone
+    - Le hostname / mailname    
+- Lecture logs !!! mail-xx ou syslog ?
+    https://github.com/garyelephant/pygrok
+    https://github.com/ninech/logstash-patterns/tree/master/patterns.d    
+- Autres tests:
+    - direct pyclamd
+    - direct amavis protocol ?
+    
+- voir si pyinstaller peut rendre portable la solution        
 
 - Synthèse de la configuration en cours:
     - Domaines/Emails autorisés
     - mynetworks
     - tags anti spam
     - ....
-    
-- A bien traiter:
-    - L'environnement doit être correctement réinitialiser à chaque test
-    - voir 
 
-- Si supervisor:
-    - Test XMLRPC des services et leur état !
-    
-- Lecture logs !!! mail-xx ou syslog ?
-    https://github.com/garyelephant/pygrok
-    https://github.com/ninech/logstash-patterns/tree/master/patterns.d    
-
-- Autres tests:
-    - direct pyclamd
-    - direct amavis protocol ?
-    
 - Tests minimum:
     - Mails entrants / sortant normals
     - Mail entrant avec virus, spam ou banned
@@ -37,6 +36,8 @@
         - Header
         - Notification rcpt, sender, admin
         - Quarantine
+            - par mail et local
+            - besoin du serveur smtp de test
     - Mail virus ham selon rules spécifiques de correction dans amavis
     - Mail unchecked
     - Mail greylisted:
@@ -46,6 +47,7 @@
     - Mail Dépassement taille
     - Mail client ip en RBL
         - Besoin serveur RBL pour simuler spamhaus
+        
 """
 
 """

@@ -1,7 +1,7 @@
 ---
 
 fail2ban_ignoreip:
-  - 127.0.0.1/8
+  - 127.0.0.0/8
   
 fail2ban_bantime: 604800
 
