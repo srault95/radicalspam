@@ -184,6 +184,16 @@ class RadicalSpamTesting(object):
         #transport_maps = hash:/etc/postfix/local/transport
         self.postconf_set("transport_maps=")
         
+        """
+        #smtpd_client_restrictions = permit_mynetworks, check_client_access hash:/etc/postfix/local/whitelist-clients, sleep 2, check_client_access hash:/etc/postfix/local/blacklist-clients , reject_rbl_client zen.spamhaus.org
+
+        #smtpd_relay_restrictions = check_recipient_access hash:/etc/postfix/local/blacklist-recipients, reject_non_fqdn_recipient, check_policy_service inet:127.0.0.1:10023, reject_unauth_destination
+         
+        """
+
+        self.postconf_set("smtpd_client_restrictions=permit_mynetworks, check_client_access hash:/etc/postfix/local/whitelist-clients, check_client_access hash:/etc/postfix/local/blacklist-clients")
+        self.postconf_set("smtpd_relay_restrictions=check_recipient_access hash:/etc/postfix/local/blacklist-recipients, reject_non_fqdn_recipient, reject_unauth_destination")
+        
         #TODO: option
         self.postconf_set("content_filter=")
         
