@@ -308,8 +308,11 @@ class RadicalSpamTesting(object):
                            mynetworks=self.mynetworks
                            ).create_message()
         result = client.send(msg)
+        print("------------------RESULT-----------------------")
         pprint(result)
+        print("--------------RECEIVE MESSAGES-----------------")
         pprint(self.server._messages)
+        print("-----------------------------------------------")
         
         #self.assertSendResult(result)
         #self.assertEqual(len(self.server._messages), 1)
