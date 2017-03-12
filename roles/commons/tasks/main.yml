@@ -1,7 +1,7 @@
 ---
 
 - name: Dump all vars
-  action: template src=dumpall.j2 dest=/tmp/ansible-vars
+  action: template src=dumpall.j2 dest=/var/log/vars-{{hostname_fqdn}}.log
   tags: debug
 
 - name: Set local timezone
@@ -27,7 +27,7 @@
 - name: apt-get dist-upgrade
   apt: upgrade=dist force=yes install_recommends=no
   tags: install
-  
+
 - name: Install required
   apt: name={{ item }} state=latest install_recommends=no
   with_items:
@@ -56,6 +56,13 @@
      - up failover interface
   tags: config
 
+- name: remove package
+  apt:
+    name: apparmor
+    state: absent
+    purge: true
+  tags: config
+  
 - name: cron is running and service enabled
   service: name=cron state=started enabled=yes
   when: not supervisor_enable and ansible_virtualization_type != "docker"
