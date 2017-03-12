@@ -26,4 +26,12 @@ amavis_quarantine_method: smtp:[178.32.109.159]:1025
 amavis_quarantine_to: quarantine@radical-spam.com 
 amavis_destiny_unchecked: D_PASS
   
-  
+clamav_unofficial_sigs_enable: true  
+
+postfix_certificate_country: FR
+postfix_certificate_state: Paris
+postfix_certificate_location: Paris
+postfix_certificate_organisation: radical-spam.com
+postfix_certificate_orgunit: S2LTIC
+postfix_certificate_email: postmaster@radical-spam.com
+postfix_certificate_days_valid: 3650

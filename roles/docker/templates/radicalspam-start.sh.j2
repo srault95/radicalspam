@@ -10,7 +10,7 @@ clamav_update(){
 	{% if clamav_unofficial_sigs_enable %}    
     echo "Update clamav unofficial-sigs"
     if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
-      /usr/sbin/clamav-unofficial-sigs
+      /usr/sbin/gosu clamav /usr/sbin/clamav-unofficial-sigs
     fi
     {% endif %}
     

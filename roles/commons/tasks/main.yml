@@ -1,5 +1,9 @@
 ---
 
+- name: Dump all vars
+  action: template src=dumpall.j2 dest=/tmp/ansible-vars
+  tags: debug
+
 - name: Set local timezone
   timezone: name={{timezone}}
   when: ansible_virtualization_type != "docker"
@@ -27,11 +31,13 @@
 - name: Install required
   apt: name={{ item }} state=latest install_recommends=no
   with_items:
+    - openssl
     - apt-transport-https
     - ca-certificates
     - software-properties-common
     - language-pack-en
     - cron
+    - gosu
     - curl
     - ufw
     - python3-pip

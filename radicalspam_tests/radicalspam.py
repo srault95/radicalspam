@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 """
-- Déployer pour un vrai domaine:
-    - livrer où ensuite ?
-
 - Voir settings par fichier yaml ou env ou args ?
 - Envoyer tous les mails de tests et attendre résultats !
     - gérer pb avec greylist: mettre en whitelist ip nécessaire ?    

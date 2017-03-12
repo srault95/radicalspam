@@ -45,7 +45,8 @@ smtpd_helo_restrictions =
 smtpd_sender_restrictions = 
 	permit_mynetworks, 
 	check_sender_access hash:/etc/postfix/local/exceptions-senders, 
-	reject_non_fqdn_sender, 
+	reject_non_fqdn_sender,
+	{% if postfix_rbls_sender %}, reject_rhsbl_sender {{postfix_rbls_sender|join('reject_rhsbl_sender ')}}{% endif %} 
 	{% if postfix_spoofing_enable %}check_sender_access hash:/etc/postfix/local/spoofing, {% endif %}
 	check_sender_access hash:/etc/postfix/local/blacklist-senders
 
@@ -70,11 +71,12 @@ disable_vrfy_command=yes
 
 readme_directory = no
 
-#smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-#smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
-#smtpd_use_tls=yes
-#smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-#smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+{% if postfix_certificate_self_enable %}
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = yes
+smtpd_tls_cert_file = /etc/ssl/certs/mailserver.pem
+smtpd_tls_key_file = /etc/ssl/private/mailserver.pem
+{% endif %}
 
 #myhostname = radicalspam.localhost.net
 alias_maps = hash:/etc/aliases

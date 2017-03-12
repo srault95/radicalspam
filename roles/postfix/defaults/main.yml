@@ -16,6 +16,9 @@ postfix_filter_max_servers: 2
 postfix_rbls_client:
   - zen.spamhaus.org
   
+postfix_rbls_sender:
+  - dbl.spamhaus.org  
+  
 postfix_spoofing_enable: true
 
 # smtp verify - not enable if exchange
@@ -23,3 +26,12 @@ postfix_verify_enable: false
 
 # bind ip for smtp relay
 postfix_smtp_bind_address:
+
+postfix_certificate_self_enable: true
+postfix_certificate_country: FR
+postfix_certificate_state: Paris
+postfix_certificate_location: Paris
+postfix_certificate_organisation: example.net
+postfix_certificate_orgunit: S2LTIC
+postfix_certificate_email: postmaster@example.net
+postfix_certificate_days_valid: 3650

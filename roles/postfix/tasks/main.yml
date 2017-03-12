@@ -47,6 +47,22 @@
 - name: postfix config script
   template: src=templates/postfix-config.sh.j2 dest=/etc/postfix/local/postfix-config.sh mode=0750 backup=yes
   tags: config
+  
+- name: postfix - create a self-signed certificate
+  when: postfix_certificate_self_enable
+  command: >
+    openssl req -newkey rsa:4096
+      -nodes -sha512 -x509
+      -days {{ postfix_certificate_days_valid }}
+      -nodes
+      -subj "/C={{ postfix_certificate_country }}/ST={{ postfix_certificate_state }}/L={{ postfix_certificate_location }}/O={{ postfix_certificate_organisation }}/OU={{ postfix_certificate_orgunit }}{% for domain in domains %}/CN={{ domain }}{% endfor %}/emailAddress={{ postfix_certificate_email }}"
+      -out /etc/ssl/certs/mailserver.pem
+      -keyout /etc/ssl/private/mailserver.pem
+  args:
+    creates: /etc/ssl/certs/mailserver.pem
+
+- name: Restrict access permissions of the private key
+  file: path=/etc/ssl/private/mailserver.pem mode=0640
 
 - name: postfix finished config
   shell: /etc/postfix/local/postfix-config.sh

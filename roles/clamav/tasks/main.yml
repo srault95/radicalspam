@@ -36,10 +36,10 @@
   shell: |
     echo "Update clamav sigs"
     freshclam -c 1
-    #echo "Update clamav unofficial-sigs"
-    #if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
-    #  /usr/sbin/clamav-unofficial-sigs
-    #fi
+    echo "Update clamav unofficial-sigs"
+    if [ ! -e /var/lib/clamav/jurlbl.ndb ]; then
+      /usr/sbin/gosu clamav /usr/sbin/clamav-unofficial-sigs
+    fi
     chown clamav.clamav -R /var/lib/clamav
   when: ansible_virtualization_type != "docker"
   tags: config
