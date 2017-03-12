@@ -22,14 +22,20 @@
   when: supervisor_enable
   tags: config
   
+#default use=systemd (inventory: ansible_service_mgr)  
 - name: supervisor is running and service enable
-  service: name=supervisor state=restarted enabled=yes sleep=15
+  service: name=supervisor state=restarted enabled=yes use=service
   when: supervisor_enable and ansible_virtualization_type != "docker"
   tags: service
+  
+#- name: Ensure supervisor launches on boot
+#  command: systemctl enable supervisor  
+#  when: supervisor_enable and ansible_virtualization_type != "docker"
+#  tags: service
 
 - name: supervisor is not running and service disabled
   service: name=supervisor state=stopped enabled=no
-  when: not supervisor_enable
+  when: not supervisor_enable or ansible_virtualization_type == "docker"
   tags: service
     
 - name: reboot nodes

@@ -20,15 +20,26 @@
   apt: update_cache=yes
   tags: install
   
+- name: apt-get dist-upgrade
+  apt: upgrade=dist force=yes install_recommends=no
+  tags: install
+  
 - name: Install required
   apt: name={{ item }} state=latest install_recommends=no
   with_items:
-    - cron
+    - apt-transport-https
     - ca-certificates
+    - software-properties-common
+    - language-pack-en
+    - cron
     - curl
     - ufw
     - python3-pip
     - git
+  tags: install
+  
+- name: localgen install
+  locale_gen: name=en_US state=present  
   tags: install
 
 - name: configure ovh failover interface
