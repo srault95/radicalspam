@@ -1,5 +1,11 @@
 FROM williamyeh/ansible:master-ubuntu16.04-onbuild
 
+ARG POSTGREY_ENABLE=true
+ARG AMAVIS_ENABLE=true
+ARG CLAMAV_ENABLE=true
+ARG SA_ENABLE=true
+ARG POSTFIX_FILTER_ENABLE=true
+
 # https://github.com/ansible/ansible/blob/devel/lib/ansible/constants.py
 ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_RETRY_FILES_ENABLED false

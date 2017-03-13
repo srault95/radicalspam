@@ -8,7 +8,12 @@ build-no-cache:
 	docker build --pull --force-rm --no-cache -t $(NAME) .
 	
 build:
-	docker build -t $(NAME) .
+	docker build -t $(NAME) \
+		--build-arg POSTFIX_FILTER_ENABLE=false \
+		--build-arg POSTGREY_ENABLE=false \
+		--build-arg AMAVIS_ENABLE=false \
+		--build-arg CLAMAV_ENABLE=false \
+		--build-arg SA_ENABLE=false .
 
 fake:
 	mkdir -vp /mailhog
@@ -28,11 +33,6 @@ run:
 	   -h mail.my-domain.com \
 	   -v "`pwd`/test":/tmp/docker-mailserver-test \
 	   -v /etc/localtime:/etc/localtime \
-	   -e POSTFIX_FILTER_ENABLE=false \
-	   -e POSTGREY_ENABLE=false \
-	   -e AMAVIS_ENABLE=false \
-	   -e CLAMAV_ENABLE=false \
-	   -e SA_ENABLE=false \
 	   $(NAME)
 	
 	sleep 15
