@@ -27,13 +27,13 @@
       'local-address': 127.0.0.1
       #'server-id': 'nothing to see here'  
   roles:
-    - syslog
+    - { role: syslog, when: syslog_enable }
     - { role: pdns, when: pdns_enable }
     - { role: pdns_recursor-ansible, when: pdns_enable}
-    - fail2ban
-    - postfix
-    - clamav
-    - spamassassin
+    - { role: fail2ban, when: fail2ban_enable }
+    - { role: postfix, when: postfix_enable }
+    - { role: clamav, when: clamav_enable }
+    - { role: spamassassin, when: sa_enable }
     - { role: postgrey, when: postgrey_enable }
     - { role: amavis, when: amavis_enable }
     - { role: docker, when: ansible_virtualization_type == "docker" }
