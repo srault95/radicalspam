@@ -1,6 +1,6 @@
 ---
 
-fail2ban_enable: "{{ ansible_env.FAIL2BAN_ENABLE|default('true') }}"
+fail2ban_enable: {{ ansible_env.FAIL2BAN_ENABLE|default('true') }}
 
 fail2ban_ignoreip:
   - 127.0.0.0/8

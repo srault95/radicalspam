@@ -1,7 +1,7 @@
 ---
 # defaults file for clamav-role
 
-clamav_enable: "{{ ansible_env.CLAMAV_ENABLE|default('true') }}"
+clamav_enable: {{ ansible_env.CLAMAV_ENABLE|default('true') }}
 
 clamav_foreground: "{{supervisor_enable|default(false)}}"
 
