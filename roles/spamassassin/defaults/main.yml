@@ -1,4 +1,6 @@
 
+sa_enable: "{{ ansible_env.SA_ENABLE|default('true') }}"
+
 sa_redis_enable: false
 sa_redis_server: 127.0.0.1:6379
 sa_redis_db: 1

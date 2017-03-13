@@ -1,4 +1,4 @@
-postgrey_enable: true
+postgrey_enable: "{{ ansible_env.POSTGREY_ENABLE|default('true') }}"
 
 postgrey_verbose: true
 

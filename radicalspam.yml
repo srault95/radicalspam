@@ -21,8 +21,15 @@
   #remote_user: ubuntu
   remote_user: '{{ remote_user|default("ubuntu") }}'
   become: yes
+  vars:
+    pdns_rec_config:
+      'allow-from': '127.0.0.1/8'
+      'local-address': 127.0.0.1
+      #'server-id': 'nothing to see here'  
   roles:
     - syslog
+    - { role: pdns, when: pdns_enable }
+    - { role: pdns_recursor-ansible, when: pdns_enable}
     - fail2ban
     - postfix
     - clamav

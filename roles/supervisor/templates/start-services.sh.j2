@@ -5,6 +5,11 @@ set -e
 echo "Start syslog..."
 supervisorctl start syslog
 
+{% if pdns_enable %}
+echo "Start dns server..."
+supervisorctl start dns
+{% endif %}
+
 echo "Start clamd..."
 supervisorctl start clamd
 sleep 2

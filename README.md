@@ -33,12 +33,21 @@ Les seuls éléments importants à personnaliser sont:
 
 - A utiliser si vous souhaitez charger des rôles Ansible (galaxy) supplémentaires 
 
-### Variables d'environnement d'Ansible
+### Variables d'environnements
 
-- ANSIBLE_DEBUG=false
-- ANSIBLE_VERBOSITY=0
-- ANSIBLE_TIMEOUT=10
-- ANSIBLE_REMOTE_USER=none
+
+Nom                 | Défaut | Description
+------------------- | ------ | ------
+AMAVIS_ENABLE       | true   | Activation/Désactivation de Amavisd-new
+CLAMAV_ENABLE       | true   | Activation/Désactivation de Clamav
+FAIL2BAN_ENABLE       | true   | Activation/Désactivation de Fail2ban
+PDNS_ENABLE       | true   | Activation/Désactivation de PowerDNS
+POSTFIX_ENABLE       | true   | Activation/Désactivation de Postfix
+POSTFIX_FILTER_ENABLE       | true   | Activation/Désactivation du Filtre anti-spam/anti-virus pour Postfix
+POSTGREY_ENABLE       | true   | Activation/Désactivation de Postgrey
+SA_ENABLE       | true   | Activation/Désactivation de SpamAssassin
+SUPERVISOR_ENABLE       | true   | Activation/Désactivation de Supervisor
+SYSLOG_ENABLE       | true   | Activation/Désactivation de Syslog-ng
 
 ## Installation
 
@@ -46,13 +55,15 @@ Les seuls éléments importants à personnaliser sont:
 
 A utiliser si vous souhaitez déployer RadicalSpam sur un ou plusieurs serveurs dédiés
 
-	docker pull williamyeh/ansible:alpine3
+	docker pull williamyeh/ansible:master-ubuntu16.04
 	git clone https://github.com/srault95/radicalspam
 	cd radicalspam
 	docker run -it --rm -w /tmp \
 		-v /etc/ansible:/etc/ansible -v $PWD:/tmp -v /root:/root \
-		williamyeh/ansible:alpine3 \
+		williamyeh/ansible:master-ubuntu16.04 \
 		ansible-playbook /tmp/radicalspam.yml -vv
+		
+> Validé sur VPS SSD3 - https://www.ovh.com/fr/vps/vps-ssd.xml		
 
 ### Tout dans un container Docker
 

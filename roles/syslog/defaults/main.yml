@@ -1,5 +1,7 @@
 ---
 
+syslog_enable: "{{ ansible_env.SYSLOG_ENABLE|default('true') }}"
+
 syslog_udp_enable: false
 
 syslog_maillog_enable: true

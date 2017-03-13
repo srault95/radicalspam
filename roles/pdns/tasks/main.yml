@@ -1,0 +1,15 @@
+- name: powerdns is running and service enabled
+  when: not supervisor_enable and ansible_virtualization_type != "docker"
+  service:
+    name: pdns-recursor
+    state: started
+    enabled: true
+  tags: service
+  
+- name: powerdns is running and service enabled
+  when: supervisor_enable or ansible_virtualization_type == "docker"
+  service:
+    name: pdns-recursor
+    state: stopped
+    enabled: false
+  tags: service 

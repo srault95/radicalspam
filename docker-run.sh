@@ -76,12 +76,20 @@ docker_build() {
 
 docker_run() {
 	echo "Run radicalspam container..."
+	
 	docker run -d \
 	   --name ${CT_NAME} \
-	   --privileged \
+	   --cap-add NET_ADMIN \
 	   --net host --pid=host \
 	   -v /etc/localtime:/etc/localtime \
 	   ${DOCKER_IMAGE}
+	
+	#docker run -d \
+	#   --name ${CT_NAME} \
+	#   --privileged \
+	#   --net host --pid=host \
+	#   -v /etc/localtime:/etc/localtime \
+	#   ${DOCKER_IMAGE}
 	
 	#docker run -d \
 	#   --name ${CT_NAME} \

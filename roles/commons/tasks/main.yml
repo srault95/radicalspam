@@ -39,6 +39,8 @@
     - cron
     - gosu
     - curl
+    - dnsutils
+    - net-tools
     - ufw
     - python3-pip
     - git

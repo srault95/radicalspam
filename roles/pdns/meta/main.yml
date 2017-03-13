@@ -1,0 +1,2 @@
+dependencies:
+  - src: https://github.com/PowerDNS/pdns_recursor-ansible.git

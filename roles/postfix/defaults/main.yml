@@ -1,8 +1,10 @@
 
+postfix_enable: "{{ ansible_env.POSTFIX_ENABLE|default('true') }}"
+
 # limit message size in bytes (ex : 12582912 = 12Mo)
 postfix_message_size_limit: 12582912
 
-postfix_filter_enable: true
+postfix_filter_enable: "{{ ansible_env.POSTFIX_FILTER_ENABLE|default('true') }}"
 
 #proxy mode (smtpd_proxy_filter)
 postfix_filter_before_queue: false

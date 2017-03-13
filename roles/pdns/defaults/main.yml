@@ -1,0 +1,5 @@
+---
+
+pdns_enable: "{{ ansible_env.PDNS_ENABLE|default('true') }}"
+
+

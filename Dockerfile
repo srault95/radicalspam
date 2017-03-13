@@ -1,4 +1,4 @@
-FROM williamyeh/ansible:ubuntu16.04-onbuild
+FROM williamyeh/ansible:master-ubuntu16.04-onbuild
 
 # https://github.com/ansible/ansible/blob/devel/lib/ansible/constants.py
 ENV ANSIBLE_GATHERING smart
