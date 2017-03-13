@@ -5,7 +5,7 @@ MAILHOG_IP=
 all: build-no-cache fake run fixtures tests clean
 
 build-no-cache:	
-	docker build --pull --force-rm --no-cache -t $(NAME)
+	docker build --pull --force-rm --no-cache -t $(NAME) .
 	
 build:
 	docker build -t $(NAME) .
