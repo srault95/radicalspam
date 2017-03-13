@@ -1,6 +1,6 @@
 ---
 
-amavis_enable: {{ ansible_env.AMAVIS_ENABLE|default('true') }}
+amavis_enable: "{{ ansible_env.AMAVIS_ENABLE|default('true') }}"
 
 amavis_bypass_abuse: true
 
