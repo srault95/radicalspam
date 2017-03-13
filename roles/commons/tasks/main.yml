@@ -41,6 +41,7 @@
     - curl
     - dnsutils
     - net-tools
+    - netcat-openbsd
     - ufw
     - python3-pip
     - git
