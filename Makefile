@@ -17,25 +17,32 @@ build:
 
 fake:
 	mkdir -vp /mailhog
-	docker run -d --name mailhog \
+	docker run -d --name mailhog-testing \
 		-p 1025:1025 \
 		-p 8025:8025 \
 		-v /mailhog/mail:/var/lib/mail \
 		srault95/docker-mailhog
-	MAILHOG_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mailhog)
+	MAILHOG_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mailhog-testing)
 	
 	#TODO: creer un client smtp et utiliser son ip dans mynetworks
 	
 run:
 	docker run -d --name mail \
+	   --dns 127.0.0.1 \
+	   -h mail.my-domain.com \
 	   -t \
 	   --cap-add NET_ADMIN \
-	   -h mail.my-domain.com \
 	   -v "`pwd`/test":/tmp/docker-mailserver-test \
 	   -v /etc/localtime:/etc/localtime \
 	   $(NAME)
 	
 	sleep 15
+	
+pre_test:
+	docker exec mail postconf -e 'transport_maps='	
+	docker exec mail postconf -e 'smtpd_client_restrictions=permit_mynetworks,check_client_access hash:/etc/postfix/local/whitelist-clients, check_client_access hash:/etc/postfix/local/blacklist-clients'	
+	docker exec mail postconf -e 'smtpd_relay_restrictions=check_recipient_access hash:/etc/postfix/local/blacklist-recipients, reject_non_fqdn_recipient, reject_unauth_destination'	
+	docker exec mail postconf -e 'transport_maps='	
 	
 fixtures:
 	docker exec mail /bin/sh -c "nc 0.0.0.0 25 < /tmp/docker-mailserver-test/email-templates/amavis-spam.txt"
@@ -71,7 +78,7 @@ tests:
 	
 clean:
 	-docker rm -f \
-		mailhog \
+		mailhog-testing \
 		mail
 		
 		

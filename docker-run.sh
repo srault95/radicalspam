@@ -80,7 +80,8 @@ docker_run() {
 	docker run -d \
 	   --name ${CT_NAME} \
 	   --cap-add NET_ADMIN \
-	   --net host --pid=host \
+	   --dns 127.0.0.1 \
+	   -t \
 	   -v /etc/localtime:/etc/localtime \
 	   ${DOCKER_IMAGE}
 	

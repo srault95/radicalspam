@@ -39,3 +39,5 @@ RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
 EXPOSE 25/tcp 465/tcp 9001/tcp
 
 CMD ["/usr/local/bin/supervisor-start"]
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
