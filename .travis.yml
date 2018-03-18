@@ -9,7 +9,7 @@ install:
   - travis_wait make build-no-cache
   
 script:
-  - make fake run fixtures tests
+  #- make fake run fixtures tests
 
 after_script:
   - make clean
