@@ -34,7 +34,8 @@ ENV INVENTORY		inventory.ini
 # /var/lib/clamav \
 # /var/lib/users/spamassassin
 
-RUN ansible-playbook-wrapper --extra-vars "remote_user=root hosts=localhost"
+#ansible-playbook --connection=local --extra-vars "remote_user=root hosts=localhost" -i inventory.ini -l localhost radicalspam.yml
+RUN ansible-playbook-wrapper --extra-vars "rs_remote_user=root rs_hosts=localhost"
 
 EXPOSE 25/tcp 465/tcp 9001/tcp
 

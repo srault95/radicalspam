@@ -2,7 +2,7 @@
 
 - hosts: all
   gather_facts: no
-  remote_user: '{{ remote_user|default("ubuntu") }}'
+  remote_user: '{{ rs_remote_user|default("ubuntu") }}'
   become: yes
   pre_tasks:
     - raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
@@ -12,16 +12,16 @@
   gather_facts: yes
   #remote_user: ubuntu
   #--extra-vars "remote_user=root"
-  remote_user: '{{ remote_user|default("ubuntu") }}'
+  remote_user: '{{ rs_remote_user|default("ubuntu") }}'
   become: yes
   roles:
     - commons
 
-- hosts: '{{ hosts|default("radicalspam") }}'
+- hosts: '{{ rs_hosts|default("radicalspam") }}'
   strategy: debug
   gather_facts: no
   #remote_user: ubuntu
-  remote_user: '{{ remote_user|default("ubuntu") }}'
+  remote_user: '{{ rs_remote_user|default("ubuntu") }}'
   become: yes
   vars:
     pdns_rec_config:
